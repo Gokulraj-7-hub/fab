@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inventory - BillFlow</title>
+  <meta name="description" content="Track stock availability">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
+</head>
+<body>
+  <div class="app-wrapper">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="top-navbar" id="top-navbar"></header>
+      <main class="content-area">
+
+        <div class="page-header">
+          <div>
+            <h1>Inventory</h1>
+            <p>Track stock levels and product availability</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button class="btn btn-outline" onclick="location.href='products.html?action=add'" id="btn-add-product-inv"><i class="bi bi-plus-circle"></i> Add Product</button>
+            <button class="btn btn-outline" onclick="location.href='customers.html?action=add'" id="btn-add-customer-inv"><i class="bi bi-person-plus"></i> Add Customer</button>
+            <button class="btn btn-outline" onclick="location.href='suppliers.html?action=add'" id="btn-add-supplier-inv"><i class="bi bi-truck"></i> Add Supplier</button>
+            <button class="btn btn-primary" onclick="exportInventory()" id="btn-export-inventory"><i class="bi bi-download"></i> Export</button>
+          </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid-4 mb-24" id="inventory-stats"></div>
+
+        <!-- Filters -->
+        <div class="card mb-20">
+          <div class="card-body" style="padding:12px 20px">
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <div class="navbar-search" style="width:280px">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search inventory..." id="inv-search" oninput="filterInventory()">
+              </div>
+              <select class="form-control" style="width:180px" id="inv-filter-cat" onchange="filterInventory()">
+                <option value="">All Categories</option>
+              </select>
+              <select class="form-control" style="width:160px" id="inv-filter-stock" onchange="filterInventory()">
+                <option value="">All Levels</option>
+                <option value="critical">Critical (≤5)</option>
+                <option value="low">Low (≤10)</option>
+                <option value="healthy">Healthy (>10)</option>
+              </select>
+              <span class="text-sm text-muted" id="inv-count"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inventory Table -->
+        <div class="card">
+          <div class="card-body" style="padding:0">
+            <div class="table-container">
+              <table class="data-table" id="inventory-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>HSN Code</th>
+                    <th>Category</th>
+                    <th>Unit</th>
+                    <th>Available Stock</th>
+                    <th>Rate</th>
+                    <th>Stock Value</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="inventory-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    Components.init('Inventory');
+
+    // Populate category filter
+    function populateCategories() {
+      const catFilter = document.getElementById('inv-filter-cat');
+      if (catFilter) {
+        catFilter.innerHTML = '<option value="">All Categories</option>' + 
+          (Store.categories || []).map(c => `<option value="${c}">${c}</option>`).join('');
+      }
+    }
+    populateCategories();
+
+    function renderStats(products) {
+      const totalItems = products.length;
+      const totalStock = products.reduce((s, p) => s + p.stock, 0);
+      const totalValue = products.reduce((s, p) => s + (p.stock * p.rate), 0);
+      const lowStock = products.filter(p => p.stock <= 10 && p.status === 'active').length;
+
+      document.getElementById('inventory-stats').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="bi bi-box-seam"></i></div>
+          <div class="stat-value">${totalItems}</div>
+          <div class="stat-label">Total Products</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="bi bi-stack"></i></div>
+          <div class="stat-value">${totalStock.toLocaleString()}</div>
+          <div class="stat-label">Total Stock Units</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon orange"><i class="bi bi-currency-rupee"></i></div>
+          <div class="stat-value">${Utils.currency(totalValue)}</div>
+          <div class="stat-label">Total Stock Value</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red"><i class="bi bi-exclamation-triangle"></i></div>
+          <div class="stat-value">${lowStock}</div>
+          <div class="stat-label">Low Stock Items</div>
+        </div>
+      `;
+    }
+
+    function filterInventory() {
+      let products = Store.getProducts().filter(p => p.status === 'active');
+      const q = document.getElementById('inv-search').value;
+      const cat = document.getElementById('inv-filter-cat').value;
+      const level = document.getElementById('inv-filter-stock').value;
+
+      if (q) products = Utils.searchFilter(products, q, ['name', 'hsn', 'code']);
+      if (cat) products = products.filter(p => p.category === cat);
+      if (level === 'critical') products = products.filter(p => p.stock <= 5);
+      else if (level === 'low') products = products.filter(p => p.stock <= 10);
+      else if (level === 'healthy') products = products.filter(p => p.stock > 10);
+
+      renderStats(products);
+      renderInventory(products);
+    }
+
+    function renderInventory(products) {
+      const tbody = document.getElementById('inventory-body');
+      document.getElementById('inv-count').textContent = `Showing ${products.length} items`;
+
+      if (!products.length) {
+        tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state"><i class="bi bi-clipboard-data"></i><h5>No inventory data</h5></div></td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => {
+        let statusClass = 'badge-success', statusText = 'In Stock';
+        if (p.stock <= 5) { statusClass = 'badge-danger'; statusText = 'Critical'; }
+        else if (p.stock <= 10) { statusClass = 'badge-warning'; statusText = 'Low Stock'; }
+
+        return `
+          <tr>
+            <td><strong>${p.name}</strong></td>
+            <td><code style="font-size:0.75rem;background:var(--bg);padding:2px 6px;border-radius:4px">${p.hsn || '—'}</code></td>
+            <td>${p.category}</td>
+            <td>${p.unit}</td>
+            <td><strong>${p.stock}</strong></td>
+            <td>${Utils.currency(p.rate)}</td>
+            <td><strong>${Utils.currency(p.stock * p.rate)}</strong></td>
+            <td><span class="badge ${statusClass}">${statusText}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function exportInventory() {
+      Utils.showToast('Export feature will be available in Phase 2');
+    }
+
+    filterInventory();
+  </script>
+</body>
+</html>

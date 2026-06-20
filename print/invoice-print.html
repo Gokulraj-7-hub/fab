@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tax Invoice - BillFlow</title>
+  <link rel="stylesheet" href="../assets/css/print.css?v=5">
+  <script src="../assets/js/store.js"></script>
+  <script src="../assets/js/utils.js"></script>
+</head>
+<body>
+
+  <div class="print-toolbar no-print">
+    <button onclick="window.print()" style="padding:8px 16px;background:#1d4ed8;color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:10px;font-weight:bold;">Print Invoice</button>
+    <button onclick="window.close()" style="padding:8px 16px;background:#fff;border:1px solid #ccc;border-radius:4px;cursor:pointer;">Close</button>
+  </div>
+
+  <div class="print-wrapper">
+    <div class="print-title">Tax Invoice</div>
+    <div class="print-box" id="invoice-root"></div>
+  </div>
+
+  <script>
+    const raw = sessionStorage.getItem('printInvoice');
+    if (!raw) {
+      document.getElementById('invoice-root').innerHTML = '<p style="padding:40px;text-align:center">No invoice data found</p>';
+    } else {
+      const inv = JSON.parse(raw);
+      const company = Store.company;
+
+      const customer = inv.customer || Store.getCustomerById(inv.customerId) || {
+        name: inv.customerName || '', gstin: '', address: '', state: '', pincode: '', mobile: ''
+      };
+
+      const fmtDate = (d) => {
+        const dt = new Date(d);
+        return dt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }).replace(/ /g, '-');
+      };
+
+      const fmtNum = (n) => Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const stateCode = (gstin) => gstin && gstin.length >= 2 ? gstin.substring(0, 2) : '';
+
+      // Number to words — Indian style, no "and" (matching Tally format)
+      const amtWords = (n) => {
+        let words = Utils.numberToWords(n);
+        words = words.replace(' Rupees', '').replace(' Only', '').replace(/ and /g, ' ').replace(/  +/g, ' ').trim();
+        return 'INR ' + words + ' Only';
+      };
+
+      const getUnit = (item) => {
+        const p = Store.getProductById(item.productId);
+        return (p && p.unit) ? p.unit.toUpperCase() : 'PCS';
+      };
+
+      const units = inv.items.map(getUnit);
+      const qtyUnit = units.length && units.every(u => u === units[0]) ? units[0] : 'PCS';
+
+      const supplyType = inv.supplyType || 'Intra-State';
+      const isIntra = supplyType === 'Intra-State';
+
+      // Build line items
+      let totalQty = 0, totalTaxable = 0, totalCGST = 0, totalSGST = 0, totalIGST = 0;
+      const hsnMap = {};
+
+      const itemRows = inv.items.map((item, i) => {
+        const qty = item.qty;
+        const rate = item.rate;
+        const discount = item.discount || 0;
+        const unit = getUnit(item);
+        const hsn = item.hsn || '';
+        const desc = item.size ? `${item.name} - ${item.size}` : item.name;
+
+        // Use custom tax rates saved in the invoice object if available
+        const cgstRate = item.cgstRate !== undefined ? item.cgstRate : (item.gst / 2);
+        const sgstRate = item.sgstRate !== undefined ? item.sgstRate : (item.gst / 2);
+        const igstRate = item.igstRate !== undefined ? item.igstRate : item.gst;
+
+        const gross = qty * rate;
+        const discountAmount = (gross * discount) / 100;
+        const taxableAmount = gross - discountAmount;
+
+        let cgst = 0, sgst = 0, igst = 0;
+        if (isIntra) {
+          cgst = (taxableAmount * cgstRate) / 100;
+          sgst = (taxableAmount * sgstRate) / 100;
+        } else {
+          igst = (taxableAmount * igstRate) / 100;
+        }
+
+        totalQty += qty;
+        totalTaxable += taxableAmount;
+        totalCGST += cgst;
+        totalSGST += sgst;
+        totalIGST += igst;
+
+        if (!hsnMap[hsn]) hsnMap[hsn] = { hsn, taxable: 0, cgstRate, sgstRate, igstRate, cgst: 0, sgst: 0, igst: 0 };
+        hsnMap[hsn].taxable += taxableAmount;
+        hsnMap[hsn].cgst += cgst;
+        hsnMap[hsn].sgst += sgst;
+        hsnMap[hsn].igst += igst;
+
+        return `<tr>
+          <td class="col-sn">${i + 1}</td>
+          <td class="col-desc"><strong>${desc}</strong></td>
+          <td class="col-hsn">${hsn}</td>
+          <td class="col-qty"><strong>${qty} ${unit}</strong></td>
+          <td class="col-rate">${fmtNum(rate)}</td>
+          <td class="col-per">${unit}</td>
+          <td class="col-amt">${fmtNum(taxableAmount)}</td>
+        </tr>`;
+      }).join('');
+
+      const totalTax = isIntra ? (totalCGST + totalSGST) : totalIGST;
+      const netAmtCalc = totalTaxable + totalTax;
+      const netTotal = inv.netTotal != null ? inv.netTotal : Math.round(netAmtCalc);
+      const roundOff = inv.roundOff != null ? inv.roundOff : (netTotal - netAmtCalc);
+      const roundOffDisplay = Math.abs(roundOff) >= 0.01 ? fmtNum(roundOff) : '';
+
+      const cgstRateStr = totalTaxable > 0 ? ((totalCGST / totalTaxable) * 100).toFixed(1) : '0.0';
+      const sgstRateStr = totalTaxable > 0 ? ((totalSGST / totalTaxable) * 100).toFixed(1) : '0.0';
+      const igstRateStr = totalTaxable > 0 ? ((totalIGST / totalTaxable) * 100).toFixed(1) : '0.0';
+
+      const invNo = inv.number || '';
+      const invDate = fmtDate(inv.date);
+      const custStateCode = stateCode(customer.gstin);
+      const compStateCode = company.stateCode || stateCode(company.gstin);
+
+      // Build address lines for party blocks
+      const buildPartyBlock = (label) => {
+        const addrParts = [customer.address, customer.taluk, customer.district].filter(Boolean);
+        return `
+        <div class="party-block">
+          <div class="party-label">${label}</div>
+          <div class="party-name">${customer.name},</div>
+          ${addrParts.map(p => `<div>${p},</div>`).join('')}
+          ${customer.state ? `<div>${customer.state}${customer.pincode ? ' - ' + customer.pincode : ''}.</div>` : ''}
+          ${customer.gstin ? `<div><span class="field-label">GSTIN/UIN</span><span class="field-sep">:</span>${customer.gstin}</div>` : ''}
+          <div><span class="field-label">State Name</span><span class="field-sep">:</span>${customer.state || ''}, Code : ${custStateCode || ''}</div>
+        </div>`;
+      };
+
+      const hsnRows = Object.values(hsnMap).map(g => {
+        if (isIntra) {
+          return `<tr>
+            <td>${g.hsn || ''}</td>
+            <td class="r">${fmtNum(g.taxable)}</td>
+            <td>${g.cgstRate.toFixed(2)}%</td>
+            <td class="r">${fmtNum(g.cgst)}</td>
+            <td>${g.sgstRate.toFixed(2)}%</td>
+            <td class="r">${fmtNum(g.sgst)}</td>
+            <td class="r">${fmtNum(g.cgst + g.sgst)}</td>
+          </tr>`;
+        } else {
+          return `<tr>
+            <td>${g.hsn || ''}</td>
+            <td class="r">${fmtNum(g.taxable)}</td>
+            <td>${g.igstRate.toFixed(2)}%</td>
+            <td class="r">${fmtNum(g.igst)}</td>
+            <td class="r">${fmtNum(g.igst)}</td>
+          </tr>`;
+        }
+      }).join('');
+
+      const tagline = company.tagline ? `<div class="company-tagline">${company.tagline}</div>` : '';
+
+      document.getElementById('invoice-root').innerHTML = `
+        <table class="layout-table">
+          <tr>
+            <td class="col-left">
+              <div class="company-block" style="display:flex; align-items:stretch; padding:0;">
+                ${company.logo ? `
+                <div style="border-right:1px solid #000; display:flex; align-items:center; justify-content:center; padding:4px; flex-shrink:0; width:105px;">
+                   <img src="${company.logo}" style="width:100%; height:auto; object-fit:contain; display:block;" alt="logo" />
+                </div>` : ''}
+                <div style="flex:1; padding:4px 6px;">
+                  <div class="company-name">${company.name}</div>
+                  ${tagline}
+                  <div>${company.address}</div>
+                  <div>${company.city ? company.city + ',' : ''}</div>
+                  <div>${company.state || ''}${company.pincode ? ' - ' + company.pincode + '.' : ''}</div>
+                  <div><span class="field-label">GSTIN/UIN</span><span class="field-sep">:</span>${company.gstin || ''}</div>
+                  <div><span class="field-label">State Name</span><span class="field-sep">:</span>${company.state || ''}, Code : ${compStateCode || ''}</div>
+                  ${company.email ? `<div><span class="field-label">E-Mail</span><span class="field-sep">:</span>${company.email}</div>` : ''}
+                </div>
+                ${company.centerLogo ? `
+                <div style="border-left:1px solid #000; display:flex; align-items:center; justify-content:center; padding:4px; flex-shrink:0; width:105px;">
+                   <img src="${company.centerLogo}" style="max-width:100%; height:auto; object-fit:contain; display:block;" alt="center logo" />
+                </div>` : ''}
+              </div>
+              ${buildPartyBlock('Consignee (Ship to)')}
+              ${buildPartyBlock('Buyer (Bill to)')}
+            </td>
+            <td class="col-right">
+              <table class="meta-table">
+                <tr>
+                  <td class="lbl">Invoice No.</td>
+                  <td class="val">${invNo}</td>
+                  <td class="lbl">Dated</td>
+                  <td class="val">${invDate}</td>
+                </tr>
+                <tr>
+                  <td class="lbl">Delivery Note</td>
+                  <td class="val"></td>
+                  <td class="lbl">Mode/Terms of Payment</td>
+                  <td class="val"></td>
+                </tr>
+                <tr>
+                  <td class="lbl">Reference No. &amp; Date.</td>
+                  <td class="val"></td>
+                  <td class="lbl">Other References</td>
+                  <td class="val">${inv.agent && inv.agent !== 'Self' ? inv.agent : ''}</td>
+                </tr>
+                <tr>
+                  <td class="lbl">Buyer's Order No.</td>
+                  <td class="val"></td>
+                  <td class="lbl">Dated</td>
+                  <td class="val"></td>
+                </tr>
+                <tr>
+                  <td class="lbl">Dispatch Doc No.</td>
+                  <td class="val">${invNo ? invNo + '/1' : ''}</td>
+                  <td class="lbl">Delivery Note Date</td>
+                  <td class="val"></td>
+                </tr>
+                <tr>
+                  <td class="lbl">Dispatched through</td>
+                  <td class="val"></td>
+                  <td class="lbl">Destination</td>
+                  <td class="val">${customer.state || ''}</td>
+                </tr>
+                <tr>
+                  <td class="lbl" style="border-bottom:none; border-right:none;">Terms of Delivery</td>
+                  <td class="val" colspan="3" style="border-bottom:none"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- ═══ ITEMS: product rows + header ═══ -->
+        <div class="items-section">
+          <table class="items-header-table">
+            <thead>
+              <tr>
+                <th class="col-sn">Sl<br>No.</th>
+                <th class="col-desc">Description of Goods</th>
+                <th class="col-hsn">HSN/SAC</th>
+                <th class="col-qty">Quantity</th>
+                <th class="col-rate">Rate</th>
+                <th class="col-per">per</th>
+                <th class="col-amt">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemRows}
+            </tbody>
+          </table>
+
+          <!-- This empty spacer grows to fill the remaining A4 space -->
+          <div class="items-spacer">
+            <div class="spacer-col spacer-sn"></div>
+            <div class="spacer-col spacer-desc"></div>
+            <div class="spacer-col spacer-hsn"></div>
+            <div class="spacer-col spacer-qty"></div>
+            <div class="spacer-col spacer-rate"></div>
+            <div class="spacer-col spacer-per"></div>
+            <div class="spacer-col spacer-amt"></div>
+          </div>
+
+          <!-- Tax summary rows pinned at bottom of items area -->
+          <table class="items-footer-table">
+            <tbody>
+              <tr class="summary-row">
+                <td class="col-sn"></td>
+                <td class="col-desc"></td>
+                <td class="col-hsn"></td>
+                <td class="col-qty"></td>
+                <td class="col-rate"></td>
+                <td class="col-per"></td>
+                <td class="col-amt">${fmtNum(totalTaxable)}</td>
+              </tr>
+              ${isIntra ? `
+                <tr>
+                  <td class="col-sn"></td>
+                  <td class="col-desc tax-label">CGST OUTPUT TAX @ ${cgstRateStr}% GST</td>
+                  <td class="col-hsn"></td>
+                  <td class="col-qty"></td>
+                  <td class="col-rate"></td>
+                  <td class="col-per"></td>
+                  <td class="col-amt">${fmtNum(totalCGST)}</td>
+                </tr>
+                <tr>
+                  <td class="col-sn"></td>
+                  <td class="col-desc tax-label">SGST OUTPUT TAX @ ${sgstRateStr}% GST</td>
+                  <td class="col-hsn"></td>
+                  <td class="col-qty"></td>
+                  <td class="col-rate"></td>
+                  <td class="col-per"></td>
+                  <td class="col-amt">${fmtNum(totalSGST)}</td>
+                </tr>
+              ` : `
+                <tr>
+                  <td class="col-sn"></td>
+                  <td class="col-desc tax-label">IGST OUTPUT TAX @ ${igstRateStr}% GST</td>
+                  <td class="col-hsn"></td>
+                  <td class="col-qty"></td>
+                  <td class="col-rate"></td>
+                  <td class="col-per"></td>
+                  <td class="col-amt">${fmtNum(totalIGST)}</td>
+                </tr>
+              `}
+              <tr>
+                <td class="col-sn"></td>
+                <td class="col-desc tax-label"><em>ROUND OFF</em></td>
+                <td class="col-hsn"></td>
+                <td class="col-qty"></td>
+                <td class="col-rate"></td>
+                <td class="col-per"></td>
+                <td class="col-amt">${roundOffDisplay}</td>
+              </tr>
+              <tr class="summary-row grand-total">
+                <td class="col-sn"></td>
+                <td class="col-desc" style="text-align:right;padding-right:6px;">Total</td>
+                <td class="col-hsn"></td>
+                <td class="col-qty"><strong>${totalQty} ${qtyUnit}</strong></td>
+                <td class="col-rate"></td>
+                <td class="col-per"></td>
+                <td class="col-amt">&#8377; ${fmtNum(netTotal)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ═══ AMOUNT IN WORDS ═══ -->
+        <div class="words-row">
+          <div class="words-row-top">
+            <span>Amount Chargeable (in words)</span>
+            <span class="eoe">E. &amp; O.E</span>
+          </div>
+          <div class="words-row-amount"><strong>${amtWords(netTotal)}</strong></div>
+        </div>
+
+        <!-- ═══ HSN TAX TABLE ═══ -->
+        <table class="hsn-tax-table">
+          <thead>
+            ${isIntra ? `
+              <tr>
+                <th rowspan="2">HSN/SAC</th>
+                <th rowspan="2">Taxable<br>Value</th>
+                <th colspan="2">CGST</th>
+                <th colspan="2">SGST/UTGST</th>
+                <th rowspan="2">Total<br>Tax Amount</th>
+              </tr>
+              <tr>
+                <th>Rate</th><th>Amount</th>
+                <th>Rate</th><th>Amount</th>
+              </tr>
+            ` : `
+              <tr>
+                <th rowspan="2">HSN/SAC</th>
+                <th rowspan="2">Taxable<br>Value</th>
+                <th colspan="2">Integrated Tax</th>
+                <th rowspan="2">Total<br>Tax Amount</th>
+              </tr>
+              <tr>
+                <th>Rate</th><th>Amount</th>
+              </tr>
+            `}
+          </thead>
+          <tbody>
+            ${hsnRows}
+            <tr class="total-row">
+              <td>Total</td>
+              <td class="r">${fmtNum(totalTaxable)}</td>
+              ${isIntra ? `
+                <td></td>
+                <td class="r">${fmtNum(totalCGST)}</td>
+                <td></td>
+                <td class="r">${fmtNum(totalSGST)}</td>
+              ` : `
+                <td></td>
+                <td class="r">${fmtNum(totalIGST)}</td>
+              `}
+              <td class="r">${fmtNum(totalTax)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- ═══ TAX IN WORDS ═══ -->
+        <div class="words-row tax-words-row">Tax Amount (in words) : <strong>${amtWords(Math.round(totalTax))}</strong></div>
+
+        <!-- ═══ FOOTER ═══ -->
+        <table class="footer-table">
+          <tr>
+            <td class="bank-cell" rowspan="2">
+              <b>Declaration</b><br>
+              We declare that this invoice shows the actual price of the<br>
+              goods described and that all particulars are true and<br>
+              correct.
+            </td>
+            <td class="bank-details-cell">
+              <b>Company's Bank Details</b><br>
+              <span class="field-label-sm">A/c Holder's Name</span><span class="field-sep-sm">:</span><strong>${company.name}</strong><br>
+              <span class="field-label-sm">Bank Name</span><span class="field-sep-sm">:</span><strong>${company.bankName || ''}</strong><br>
+              <span class="field-label-sm">A/c No.</span><span class="field-sep-sm">:</span><strong>${company.accountNo || ''}</strong><br>
+              <span class="field-label-sm">Branch &amp; IFS Code</span><span class="field-sep-sm">:</span><strong>${company.ifsc || ''}</strong>
+              ${company.bankName2 ? `
+              <div style="border-top:1px dashed #000; margin-top:4px; padding-top:4px;">
+                <span class="field-label-sm">Bank Name 2</span><span class="field-sep-sm">:</span><strong>${company.bankName2}</strong><br>
+                <span class="field-label-sm">A/c No. 2</span><span class="field-sep-sm">:</span><strong>${company.accountNo2 || ''}</strong><br>
+                <span class="field-label-sm">Branch &amp; IFS Code</span><span class="field-sep-sm">:</span><strong>${company.ifsc2 || ''}</strong>
+              </div>
+              ` : ''}
+            </td>
+          </tr>
+          <tr>
+            <td class="sign-cell">
+              <div class="sign-for">for <b>${company.name}</b></div>
+              <div class="sign-line">Authorised Signatory</div>
+            </td>
+          </tr>
+        </table>
+      `;
+    }
+
+    window.addEventListener('load', () => {
+      if (sessionStorage.getItem('printInvoice')) {
+        setTimeout(() => window.print(), 400);
+      }
+    });
+  </script>
+</body>
+</html>

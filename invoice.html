@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Invoice - BillFlow</title>
+  <meta name="description" content="Create GST invoices">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    /* ── Invoice View Modal ── */
+    .ivm-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55); z-index: 1000;
+      overflow-y: auto; padding: 24px 12px;
+    }
+    .ivm-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+    .ivm-box {
+      background: #fff; border-radius: 12px; width: 100%; max-width: 860px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25); overflow: hidden;
+      animation: ivm-pop .18s ease;
+    }
+    @keyframes ivm-pop { from { transform:scale(.97);opacity:0; } to { transform:scale(1);opacity:1; } }
+    .ivm-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg);
+    }
+    .ivm-header h4 { margin:0; font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+    .ivm-badge { font-size:.75rem; background:var(--primary); color:#fff; padding:2px 10px; border-radius:20px; font-weight:600; }
+    .ivm-body { padding: 20px 24px; }
+    .ivm-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .ivm-section { border:1px solid var(--border); border-radius:8px; margin-bottom:14px; overflow:hidden; }
+    .ivm-section-title {
+      background:var(--bg); border-bottom:1px solid var(--border);
+      padding:8px 14px; font-size:.8rem; font-weight:700;
+      color:var(--text-muted); display:flex; align-items:center; gap:6px;
+    }
+    .ivm-section-body { padding: 14px; }
+    .ivm-field label { display:block; font-size:.7rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; margin-bottom:3px; }
+    .ivm-field .ivm-val { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:6px 10px; font-size:.85rem; min-height:34px; word-break:break-all; }
+    .ivm-items-table { width:100%; border-collapse:collapse; font-size:.8rem; }
+    .ivm-items-table th { background:var(--bg); border-bottom:2px solid var(--border); padding:10px 12px; text-align:left; font-weight:600; color:var(--text-muted); font-size:.75rem; }
+    .ivm-items-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+    .ivm-items-table .num { text-align:right; }
+    /* Clickable row */
+    .inv-clickable-row { cursor:pointer; transition:background .15s; }
+    .inv-clickable-row:hover { background-color:var(--primary-bg) !important; }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="top-navbar" id="top-navbar"></header>
+      <main class="content-area">
+
+        <div class="page-header">
+          <div>
+            <h1><i class="bi bi-receipt" style="color:var(--primary);margin-right:8px"></i>Invoices</h1>
+            <p>Create new invoices and view invoice history</p>
+          </div>
+          <div style="display:flex;gap:10px" id="create-header-btns">
+            <button class="btn btn-outline" onclick="clearInvoice()" id="btn-clear-invoice"><i class="bi bi-x-lg"></i> Clear</button>
+            <button class="btn btn-primary" onclick="previewAndPrint()" id="btn-print-invoice"><i class="bi bi-printer"></i> Print</button>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showInvTab('create')" id="inv-tab-create">Create Invoice</button>
+          <button class="tab-btn" onclick="showInvTab('history')" id="inv-tab-history">Invoice History</button>
+        </div>
+
+        <!-- ── Create Invoice Panel ── -->
+        <div id="inv-panel-create">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+          <!-- Invoice Info -->
+          <div class="invoice-section">
+            <div class="section-title"><i class="bi bi-info-circle"></i> Invoice Information</div>
+            <div class="section-body">
+              <div class="grid-2">
+                <div class="form-group">
+                  <label for="inv-number">Invoice Number</label>
+                  <input type="text" class="form-control" id="inv-number" readonly style="background:var(--bg)">
+                </div>
+                <div class="form-group">
+                  <label for="inv-date">Invoice Date</label>
+                  <input type="text" class="form-control" id="inv-date" placeholder="DD/MM/YYYY" style="cursor:pointer">
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label for="inv-agent">Agent</label>
+                  <input type="text" class="form-control" id="inv-agent" value="Self">
+                </div>
+                <div class="form-group">
+                  <label for="inv-supply">Supply Type</label>
+                  <select class="form-control" id="inv-supply" onchange="onSupplyTypeChange()">
+                    <option value="Intra-State">Intra-State (CGST + SGST)</option>
+                    <option value="Inter-State">Inter-State (IGST)</option>
+                  </select>
+                  <!-- Dynamic GST inputs container -->
+                  <div id="dynamic-gst-container" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Info -->
+          <div class="invoice-section">
+            <div class="section-title"><i class="bi bi-person"></i> Customer Information</div>
+            <div class="section-body">
+              <div class="form-group">
+                <label for="inv-customer">Select Customer</label>
+                <select class="form-control" id="inv-customer" onchange="onCustomerSelect()">
+                  <option value="">-- Select Customer --</option>
+                </select>
+              </div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label for="inv-gstin">GSTIN</label>
+                  <input type="text" class="form-control" id="inv-gstin" readonly style="background:var(--bg)">
+                </div>
+                <div class="form-group">
+                  <label for="inv-phone">Phone</label>
+                  <input type="text" class="form-control" id="inv-phone" readonly style="background:var(--bg)">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inv-address">Address</label>
+                <input type="text" class="form-control" id="inv-address" readonly style="background:var(--bg)">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Product Section -->
+        <div class="invoice-section">
+          <div class="section-title"><i class="bi bi-plus-circle"></i> Add Products</div>
+          <div class="section-body">
+            <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+              <div class="form-group" style="margin:0;flex:0 0 120px">
+                <label for="add-hsn">HSN Code</label>
+                <input type="text" class="form-control" id="add-hsn" placeholder="Enter HSN">
+              </div>
+              <div class="form-group" style="margin:0;flex:1;min-width:200px">
+                <label for="add-product">Product</label>
+                <select class="form-control" id="add-product" onchange="onProductSelect()">
+                  <option value="">-- Select Product --</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin:0;flex:0 0 80px">
+                <label for="add-qty">Qty</label>
+                <input type="number" class="form-control" id="add-qty" value="1" min="1">
+              </div>
+              <div class="form-group" style="margin:0;flex:0 0 100px">
+                <label for="add-rate">Rate (₹)</label>
+                <input type="number" class="form-control" id="add-rate" step="0.01" min="0">
+              </div>
+              <div class="form-group" style="margin:0;flex:0 0 80px">
+                <label for="add-discount">Disc %</label>
+                <input type="number" class="form-control" id="add-discount" value="0" min="0" max="100">
+              </div>
+              <div class="form-group" style="margin:0;flex:0 0 70px">
+                <label for="add-gst">GST %</label>
+                <input type="number" class="form-control" id="add-gst" readonly style="background:var(--bg)">
+              </div>
+              <button class="btn btn-primary" onclick="addItemToInvoice()" id="btn-add-item" style="height:38px">
+                <i class="bi bi-plus-lg"></i> Add
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Invoice Items Table -->
+        <div class="invoice-section">
+          <div class="section-title"><i class="bi bi-table"></i> Invoice Items</div>
+          <div style="padding:0">
+            <div class="table-container">
+              <table class="data-table" id="invoice-items-table">
+                <thead>
+                  <tr>
+                    <th>S.No</th>
+                    <th>HSN Code</th>
+                    <th>Product Name</th>
+                    <th>Qty</th>
+                    <th>Rate</th>
+                    <th>Disc %</th>
+                    <th>Taxable</th>
+                    <th>GST %</th>
+                    <th id="th-cgst">CGST</th>
+                    <th id="th-sgst">SGST</th>
+                    <th id="th-igst" style="display:none">IGST</th>
+                    <th>Amount</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-items-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div></div>
+          <div class="invoice-section">
+            <div class="section-title"><i class="bi bi-calculator"></i> Invoice Summary</div>
+            <div class="section-body">
+              <div class="invoice-summary">
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span id="sum-subtotal">₹0.00</span>
+                </div>
+                <div class="summary-row" id="row-sum-cgst">
+                  <span>CGST</span>
+                  <span id="sum-cgst">₹0.00</span>
+                </div>
+                <div class="summary-row" id="row-sum-sgst">
+                  <span>SGST</span>
+                  <span id="sum-sgst">₹0.00</span>
+                </div>
+                <div class="summary-row" id="row-sum-igst" style="display:none">
+                  <span>IGST</span>
+                  <span id="sum-igst">₹0.00</span>
+                </div>
+                <div class="summary-row">
+                  <span>Total Discount</span>
+                  <span id="sum-discount">₹0.00</span>
+                </div>
+                <div class="summary-row">
+                  <span>Round Off</span>
+                  <span id="sum-roundoff">₹0.00</span>
+                </div>
+                <div class="summary-row total">
+                  <span>Net Total</span>
+                  <span id="sum-net-total">₹0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div> <!-- /inv-panel-create -->
+
+        <!-- ── Invoice History Panel ── -->
+        <div id="inv-panel-history" style="display:none">
+          <!-- Search bar -->
+          <div class="card mb-20">
+            <div class="card-body" style="padding:12px 20px">
+              <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+                <div class="navbar-search" style="width:280px">
+                  <i class="bi bi-search"></i>
+                  <input type="text" placeholder="Search invoices..." id="inv-hist-search" oninput="renderInvoiceHistory()">
+                </div>
+                <span class="text-sm text-muted" id="inv-hist-count"></span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body" style="padding:0">
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Invoice #</th>
+                      <th>Date</th>
+                      <th>Customer</th>
+                      <th>Agent</th>
+                      <th>Items</th>
+                      <th>Net Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inv-history-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    Components.init('Invoices');
+
+    /* ── Tab switching ── */
+    function showInvTab(tab) {
+      document.getElementById('inv-panel-create').style.display = tab === 'create' ? 'block' : 'none';
+      document.getElementById('inv-panel-history').style.display = tab === 'history' ? 'block' : 'none';
+      document.getElementById('create-header-btns').style.display = tab === 'create' ? 'flex' : 'none';
+      ['create','history'].forEach(t => {
+        const btn = document.getElementById('inv-tab-' + t);
+        btn.classList.toggle('active', t === tab);
+      });
+      if (tab === 'history') renderInvoiceHistory();
+    }
+
+    /* ── Invoice History ── */
+    function renderInvoiceHistory() {
+      const q = (document.getElementById('inv-hist-search')?.value || '').toLowerCase();
+      const invoices = Store.getInvoices().filter(inv =>
+        inv.number.toLowerCase().includes(q) ||
+        inv.customerName.toLowerCase().includes(q)
+      );
+      document.getElementById('inv-hist-count').textContent = `${invoices.length} invoice${invoices.length !== 1 ? 's' : ''}`;
+      const tbody = document.getElementById('inv-history-body');
+      if (!invoices.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:32px">No invoices found</td></tr>';
+        return;
+      }
+      tbody.innerHTML = invoices.map(inv => `
+        <tr class="inv-clickable-row" onclick="viewInvoiceHistory(${inv.id})" title="Click to view invoice">
+          <td><strong style="color:var(--primary)">${inv.number}</strong></td>
+          <td>${Utils.formatDate(inv.date)}</td>
+          <td>${inv.customerName}</td>
+          <td>${inv.agent || 'Self'}</td>
+          <td><span class="badge badge-info">${inv.items.length} item${inv.items.length !== 1 ? 's' : ''}</span></td>
+          <td><strong>${Utils.currency(inv.netTotal)}</strong></td>
+        </tr>
+      `).join('');
+    }
+
+    /* ── View Invoice Details ── */
+    function viewInvoiceHistory(id) {
+      const inv = Store.getInvoiceById(id);
+      if (!inv) return;
+
+      document.getElementById('ivm-number').textContent = inv.number;
+      document.getElementById('ivm-number-val').textContent = inv.number;
+      document.getElementById('ivm-date').textContent = Utils.formatDate(inv.date);
+      document.getElementById('ivm-agent').textContent = inv.agent || 'Self';
+      document.getElementById('ivm-supply').textContent = inv.supplyType || 'Intra-State';
+      document.getElementById('ivm-customer').textContent = inv.customerName;
+
+      const cust = Store.getCustomerById(inv.customerId);
+      if (cust) {
+        document.getElementById('ivm-phone').textContent = cust.mobile ? cust.mobile + (cust.mobile2 ? ', ' + cust.mobile2 : '') : '—';
+        document.getElementById('ivm-gstin').textContent = cust.gstin || 'Unregistered';
+        
+        let addrParts = [];
+        if (cust.address) addrParts.push(cust.address);
+        if (cust.taluk) addrParts.push(cust.taluk);
+        if (cust.district) addrParts.push(cust.district);
+        if (cust.state) addrParts.push(cust.state);
+        if (cust.pincode) addrParts.push(cust.pincode);
+        
+        document.getElementById('ivm-address').textContent = addrParts.join(', ') || '—';
+      } else {
+        document.getElementById('ivm-phone').textContent = '—';
+        document.getElementById('ivm-gstin').textContent = inv.customerGstin || '—';
+        document.getElementById('ivm-address').textContent = 'Customer details unavailable (deleted)';
+      }
+
+      const isInter = (inv.supplyType || '').includes('Inter');
+      document.getElementById('ivm-items-body').innerHTML = inv.items.map((item, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${item.hsn || '—'}</td>
+          <td><strong>${item.name}</strong></td>
+          <td class="num">${item.qty}</td>
+          <td class="num">${Utils.currency(item.rate)}</td>
+          <td class="num">${item.discount || 0}%</td>
+          <td class="num">${isInter
+            ? Utils.currency((item.gst || 0) / 100 * item.amount)
+            : Utils.currency((item.gst || 0) / 2 / 100 * item.amount)}
+          </td>
+          <td class="num">${Utils.currency(item.amount)}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('ivm-subtotal').textContent = Utils.currency(inv.subtotal);
+      const taxLabel = isInter ? 'IGST' : 'CGST + SGST';
+      const taxVal = isInter ? (inv.igst || 0) : ((inv.cgst || 0) + (inv.sgst || 0));
+      document.getElementById('ivm-tax-label').textContent = taxLabel;
+      document.getElementById('ivm-tax').textContent = Utils.currency(taxVal);
+      document.getElementById('ivm-discount').textContent = Utils.currency(inv.discount || 0);
+      document.getElementById('ivm-roundoff').textContent = Utils.currency(inv.roundOff || 0);
+      document.getElementById('ivm-net').textContent = Utils.currency(inv.netTotal);
+
+      document.getElementById('ivm-overlay').classList.add('active');
+    }
+
+    function closeInvoiceViewModal() {
+      document.getElementById('ivm-overlay').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeInvoiceViewModal();
+    });
+
+    // State
+    let invoiceItems = [];
+
+    // Init
+    document.getElementById('inv-number').value = Store.getNextInvoiceNumber();
+
+    // Flatpickr — DD/MM/YYYY display, YYYY-MM-DD stored internally
+    flatpickr('#inv-date', {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd/m/Y',
+      defaultDate: Utils.today(),
+      allowInput: true
+    });
+
+    // Populate customers
+    const custSelect = document.getElementById('inv-customer');
+    Store.getCustomers().forEach(c => {
+      custSelect.innerHTML += `<option value="${c.id}">${c.name}${c.gstin ? ' (' + c.gstin + ')' : ''}</option>`;
+    });
+
+    // Populate products
+    const prodSelect = document.getElementById('add-product');
+    Store.getProducts().filter(p => p.status === 'active').forEach(p => {
+      prodSelect.innerHTML += `<option value="${p.id}">${p.name}${p.hsn ? ' (HSN: ' + p.hsn + ')' : ''} - ₹${p.rate}</option>`;
+    });
+
+    // Initialize Supply Type and dynamic fields
+    onSupplyTypeChange();
+
+    function onSupplyTypeChange() {
+      const supplyType = document.getElementById('inv-supply').value;
+      const container = document.getElementById('dynamic-gst-container');
+      
+      if (supplyType === 'Intra-State') {
+        container.innerHTML = `
+          <div class="form-group" style="margin:0">
+            <label for="inv-cgst-rate">CGST (%)</label>
+            <input type="number" class="form-control" id="inv-cgst-rate" value="2.5" step="0.1" min="0" oninput="onGstRatesEdit()">
+          </div>
+          <div class="form-group" style="margin:0">
+            <label for="inv-sgst-rate">SGST (%)</label>
+            <input type="number" class="form-control" id="inv-sgst-rate" value="2.5" step="0.1" min="0" oninput="onGstRatesEdit()">
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="form-group" style="margin:0; grid-column: span 2">
+            <label for="inv-igst-rate">IGST (%)</label>
+            <input type="number" class="form-control" id="inv-igst-rate" value="5.0" step="0.1" min="0" oninput="onGstRatesEdit()">
+          </div>
+        `;
+      }
+      
+      recalculateAllItems();
+    }
+
+    function onGstRatesEdit() {
+      recalculateAllItems();
+    }
+
+    function onCustomerSelect() {
+      const id = Number(document.getElementById('inv-customer').value);
+      const c = Store.getCustomerById(id);
+      if (c) {
+        document.getElementById('inv-gstin').value = c.gstin || 'N/A';
+        document.getElementById('inv-phone').value = c.mobile + (c.mobile2 ? ', ' + c.mobile2 : '');
+        document.getElementById('inv-address').value = `${c.address}, ${c.state} - ${c.pincode}`;
+        
+        // Auto-detect supply type based on state comparison (if customer state matches company state)
+        const compState = Store.company.state;
+        if (c.state && compState && c.state.trim().toLowerCase() !== compState.trim().toLowerCase()) {
+          document.getElementById('inv-supply').value = 'Inter-State';
+        } else {
+          document.getElementById('inv-supply').value = 'Intra-State';
+        }
+        onSupplyTypeChange();
+      } else {
+        document.getElementById('inv-gstin').value = '';
+        document.getElementById('inv-phone').value = '';
+        document.getElementById('inv-address').value = '';
+      }
+    }
+
+    function onProductSelect() {
+      const id = Number(document.getElementById('add-product').value);
+      const p = Store.getProductById(id);
+      if (p) {
+        document.getElementById('add-rate').value = p.rate;
+        document.getElementById('add-gst').value = p.gst;
+        document.getElementById('add-hsn').value = p.hsn || '';
+        
+        // Auto-populate Supply Type GST fields based on selected product GST
+        const supplyType = document.getElementById('inv-supply').value;
+        if (supplyType === 'Intra-State') {
+          const half = (p.gst / 2).toFixed(1);
+          document.getElementById('inv-cgst-rate').value = half;
+          document.getElementById('inv-sgst-rate').value = half;
+        } else {
+          document.getElementById('inv-igst-rate').value = p.gst.toFixed(1);
+        }
+        recalculateAllItems();
+      }
+    }
+
+    function recalculateAllItems() {
+      const supplyType = document.getElementById('inv-supply').value;
+      const isIntra = supplyType === 'Intra-State';
+
+      invoiceItems.forEach(item => {
+        if (isIntra) {
+          const cgstRate = parseFloat(document.getElementById('inv-cgst-rate')?.value) || (item.gst / 2);
+          const sgstRate = parseFloat(document.getElementById('inv-sgst-rate')?.value) || (item.gst / 2);
+          item.cgstRate = cgstRate;
+          item.sgstRate = sgstRate;
+          item.igstRate = 0;
+          item.cgst = (item.taxableAmount * cgstRate) / 100;
+          item.sgst = (item.taxableAmount * sgstRate) / 100;
+          item.igst = 0;
+          item.netAmount = item.taxableAmount + item.cgst + item.sgst;
+        } else {
+          const igstRate = parseFloat(document.getElementById('inv-igst-rate')?.value) || item.gst;
+          item.cgstRate = 0;
+          item.sgstRate = 0;
+          item.igstRate = igstRate;
+          item.cgst = 0;
+          item.sgst = 0;
+          item.igst = (item.taxableAmount * igstRate) / 100;
+          item.netAmount = item.taxableAmount + item.igst;
+        }
+      });
+      
+      renderInvoiceItems();
+    }
+
+    function addItemToInvoice() {
+      const productId = Number(document.getElementById('add-product').value);
+      if (!productId) { Utils.showToast('Please select a product', 'error'); return; }
+
+      const hsn = document.getElementById('add-hsn').value.trim();
+      if (!hsn) { Utils.showToast('Please enter HSN code', 'error'); return; }
+
+      const product = Store.getProductById(productId);
+      const qty = Number(document.getElementById('add-qty').value) || 1;
+      const rate = Number(document.getElementById('add-rate').value) || product.rate;
+      const discount = Number(document.getElementById('add-discount').value) || 0;
+      const gst = product.gst;
+
+      const gross = qty * rate;
+      const discountAmount = (gross * discount) / 100;
+      const taxableAmount = gross - discountAmount;
+
+      const supplyType = document.getElementById('inv-supply').value;
+      let cgstRate = 0, sgstRate = 0, igstRate = 0;
+      let cgst = 0, sgst = 0, igst = 0;
+
+      if (supplyType === 'Intra-State') {
+        cgstRate = parseFloat(document.getElementById('inv-cgst-rate')?.value) || (gst / 2);
+        sgstRate = parseFloat(document.getElementById('inv-sgst-rate')?.value) || (gst / 2);
+        cgst = (taxableAmount * cgstRate) / 100;
+        sgst = (taxableAmount * sgstRate) / 100;
+      } else {
+        igstRate = parseFloat(document.getElementById('inv-igst-rate')?.value) || gst;
+        igst = (taxableAmount * igstRate) / 100;
+      }
+
+      const netAmount = taxableAmount + cgst + sgst + igst;
+
+      const existing = invoiceItems.find(item => item.productId === productId);
+      if (existing) {
+        existing.qty += qty;
+        existing.hsn = hsn;
+        const newGross = existing.qty * existing.rate;
+        existing.discountAmount = (newGross * existing.discount) / 100;
+        existing.taxableAmount = newGross - existing.discountAmount;
+        
+        if (supplyType === 'Intra-State') {
+          existing.cgstRate = cgstRate;
+          existing.sgstRate = sgstRate;
+          existing.igstRate = 0;
+          existing.cgst = (existing.taxableAmount * cgstRate) / 100;
+          existing.sgst = (existing.taxableAmount * sgstRate) / 100;
+          existing.igst = 0;
+        } else {
+          existing.cgstRate = 0;
+          existing.sgstRate = 0;
+          existing.igstRate = igstRate;
+          existing.cgst = 0;
+          existing.sgst = 0;
+          existing.igst = (existing.taxableAmount * igstRate) / 100;
+        }
+        existing.netAmount = existing.taxableAmount + existing.cgst + existing.sgst + existing.igst;
+      } else {
+        invoiceItems.push({
+          productId,
+          hsn,
+          name: product.name,
+          size: product.size || '',
+          qty,
+          rate,
+          discount,
+          discountAmount,
+          taxableAmount,
+          gst,
+          cgstRate,
+          sgstRate,
+          igstRate,
+          cgst,
+          sgst,
+          igst,
+          netAmount
+        });
+      }
+
+      document.getElementById('add-product').value = '';
+      document.getElementById('add-hsn').value = '';
+      document.getElementById('add-qty').value = 1;
+      document.getElementById('add-rate').value = '';
+      document.getElementById('add-gst').value = '';
+      document.getElementById('add-discount').value = 0;
+
+      renderInvoiceItems();
+    }
+
+    function removeItem(index) {
+      invoiceItems.splice(index, 1);
+      renderInvoiceItems();
+    }
+
+    function updateItemQty(index, qty) {
+      if (qty <= 0) return;
+      const item = invoiceItems[index];
+      item.qty = qty;
+      const newGross = item.qty * item.rate;
+      item.discountAmount = (newGross * item.discount) / 100;
+      item.taxableAmount = newGross - item.discountAmount;
+      
+      const supplyType = document.getElementById('inv-supply').value;
+      if (supplyType === 'Intra-State') {
+        item.cgst = (item.taxableAmount * item.cgstRate) / 100;
+        item.sgst = (item.taxableAmount * item.sgstRate) / 100;
+        item.igst = 0;
+      } else {
+        item.cgst = 0;
+        item.sgst = 0;
+        item.igst = (item.taxableAmount * item.igstRate) / 100;
+      }
+      item.netAmount = item.taxableAmount + item.cgst + item.sgst + item.igst;
+      
+      renderInvoiceItems();
+    }
+
+    function renderInvoiceItems() {
+      const tbody = document.getElementById('invoice-items-body');
+      const supplyType = document.getElementById('inv-supply').value;
+      const isIntra = supplyType === 'Intra-State';
+
+      document.getElementById('th-cgst').style.display = isIntra ? '' : 'none';
+      document.getElementById('th-sgst').style.display = isIntra ? '' : 'none';
+      document.getElementById('th-igst').style.display = isIntra ? 'none' : '';
+
+      if (!invoiceItems.length) {
+        tbody.innerHTML = `<tr><td colspan="${isIntra ? 12 : 11}"><div class="empty-state"><i class="bi bi-cart3"></i><h5>No items added</h5><p>Select a product and enter HSN code to add items</p></div></td></tr>`;
+        updateSummary();
+        return;
+      }
+
+      tbody.innerHTML = invoiceItems.map((item, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><code style="font-size:0.75rem">${item.hsn}</code></td>
+          <td><strong>${item.name}</strong></td>
+          <td>
+            <input type="number" value="${item.qty}" min="1" style="width:60px;padding:4px 8px;border:1px solid var(--border);border-radius:4px;text-align:center;font-size:0.85rem"
+              onchange="updateItemQty(${i}, Number(this.value))">
+          </td>
+          <td>${Utils.currency(item.rate)}</td>
+          <td>${item.discount}%</td>
+          <td>${Utils.currency(item.taxableAmount)}</td>
+          <td>${isIntra ? (item.cgstRate + item.sgstRate) : item.igstRate}%</td>
+          ${isIntra ? `
+            <td>${Utils.currency(item.cgst)}</td>
+            <td>${Utils.currency(item.sgst)}</td>
+          ` : `
+            <td>${Utils.currency(item.igst)}</td>
+          `}
+          <td><strong>${Utils.currency(item.netAmount)}</strong></td>
+          <td>
+            <button class="btn-icon delete" onclick="removeItem(${i})" title="Remove"><i class="bi bi-x-lg"></i></button>
+          </td>
+        </tr>
+      `).join('');
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const supplyType = document.getElementById('inv-supply').value;
+      const isIntra = supplyType === 'Intra-State';
+
+      document.getElementById('row-sum-cgst').style.display = isIntra ? '' : 'none';
+      document.getElementById('row-sum-sgst').style.display = isIntra ? '' : 'none';
+      document.getElementById('row-sum-igst').style.display = isIntra ? 'none' : '';
+
+      let subtotal = 0, totalCGST = 0, totalSGST = 0, totalIGST = 0, totalDiscount = 0;
+
+      invoiceItems.forEach(item => {
+        subtotal += item.taxableAmount;
+        totalCGST += item.cgst || 0;
+        totalSGST += item.sgst || 0;
+        totalIGST += item.igst || 0;
+        totalDiscount += item.discountAmount;
+      });
+
+      const totalTax = isIntra ? (totalCGST + totalSGST) : totalIGST;
+      const beforeRound = subtotal + totalTax;
+      const rounded = Math.round(beforeRound);
+      const roundOff = rounded - beforeRound;
+
+      document.getElementById('sum-subtotal').textContent = Utils.currency(subtotal);
+      if (isIntra) {
+        document.getElementById('sum-cgst').textContent = Utils.currency(totalCGST);
+        document.getElementById('sum-sgst').textContent = Utils.currency(totalSGST);
+      } else {
+        document.getElementById('sum-igst').textContent = Utils.currency(totalIGST);
+      }
+      document.getElementById('sum-discount').textContent = Utils.currency(totalDiscount);
+      document.getElementById('sum-roundoff').textContent = (roundOff >= 0 ? '+' : '') + Utils.num(roundOff);
+      document.getElementById('sum-net-total').textContent = Utils.currency(rounded);
+    }
+
+    function clearInvoice(silent) {
+      invoiceItems = [];
+      document.getElementById('inv-customer').value = '';
+      document.getElementById('inv-gstin').value = '';
+      document.getElementById('inv-phone').value = '';
+      document.getElementById('inv-address').value = '';
+      document.getElementById('inv-agent').value = 'Self';
+      document.getElementById('inv-number').value = Store.getNextInvoiceNumber();
+      document.getElementById('inv-date').value = Utils.today();
+      onSupplyTypeChange();
+      if (!silent) Utils.showToast('Invoice cleared');
+    }
+
+    function saveInvoice() {
+      const customerId = Number(document.getElementById('inv-customer').value);
+      if (!customerId) { Utils.showToast('Please select a customer', 'error'); return null; }
+      if (!invoiceItems.length) { Utils.showToast('Please add at least one item', 'error'); return null; }
+
+      const customer = Store.getCustomerById(customerId);
+      let subtotal = 0, totalCGST = 0, totalSGST = 0, totalIGST = 0, totalDiscount = 0;
+      invoiceItems.forEach(item => {
+        subtotal += item.taxableAmount;
+        totalCGST += item.cgst || 0;
+        totalSGST += item.sgst || 0;
+        totalIGST += item.igst || 0;
+        totalDiscount += item.discountAmount;
+      });
+      const totalTax = (document.getElementById('inv-supply').value === 'Intra-State') ? (totalCGST + totalSGST) : totalIGST;
+      const beforeRound = subtotal + totalTax;
+      const netTotal = Math.round(beforeRound);
+      const roundOff = netTotal - beforeRound;
+
+      return Store.addInvoice({
+        date: document.getElementById('inv-date').value,
+        customerId,
+        customerName: customer.name,
+        agent: document.getElementById('inv-agent').value,
+        supplyType: document.getElementById('inv-supply').value,
+        items: invoiceItems.map(item => ({
+          productId: item.productId,
+          hsn: item.hsn,
+          name: item.name,
+          size: item.size || '',
+          qty: item.qty,
+          rate: item.rate,
+          discount: item.discount,
+          gst: item.gst,
+          cgstRate: item.cgstRate,
+          sgstRate: item.sgstRate,
+          igstRate: item.igstRate,
+          cgst: item.cgst,
+          sgst: item.sgst,
+          igst: item.igst,
+          amount: item.netAmount
+        })),
+        subtotal,
+        cgst: totalCGST,
+        sgst: totalSGST,
+        igst: totalIGST,
+        discount: totalDiscount,
+        roundOff,
+        netTotal
+      });
+    }
+
+    function previewAndPrint() {
+      const saved = saveInvoice();
+      if (!saved) return;
+
+      const customer = Store.getCustomerById(saved.customerId);
+      sessionStorage.setItem('printInvoice', JSON.stringify({ ...saved, customer }));
+      window.open('print/invoice-print.html', '_blank');
+      Utils.showToast(`Invoice ${saved.number} saved & sent to print`);
+      clearInvoice(true);
+    }
+
+    // Handle deep linking from Dashboard
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const viewId = urlParams.get('view');
+      if (viewId) {
+        showInvTab('history');
+        setTimeout(() => viewInvoiceHistory(Number(viewId)), 100);
+      }
+    });
+  </script>
+
+  <!-- ── Invoice View Modal ── -->
+  <div class="ivm-overlay" id="ivm-overlay">
+    <div class="ivm-box">
+      <div class="ivm-header">
+        <h4>
+          <i class="bi bi-receipt" style="color:var(--primary)"></i>
+          Invoice Details
+          <span class="ivm-badge" id="ivm-number"></span>
+        </h4>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-outline btn-sm" onclick="closeInvoiceViewModal()">
+            <i class="bi bi-x-lg"></i> Close
+          </button>
+        </div>
+      </div>
+      <div class="ivm-body">
+
+        <!-- Info + Customer -->
+        <div class="ivm-grid-2">
+          <div class="ivm-section">
+            <div class="ivm-section-title"><i class="bi bi-info-circle"></i> Invoice Information</div>
+            <div class="ivm-section-body">
+              <div class="ivm-grid-2">
+                <div class="ivm-field"><label>Invoice Number</label><div class="ivm-val" id="ivm-number-val"></div></div>
+                <div class="ivm-field"><label>Date</label><div class="ivm-val" id="ivm-date"></div></div>
+              </div>
+              <div class="ivm-grid-2">
+                <div class="ivm-field"><label>Agent</label><div class="ivm-val" id="ivm-agent"></div></div>
+                <div class="ivm-field"><label>Supply Type</label><div class="ivm-val" id="ivm-supply"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ivm-section">
+            <div class="ivm-section-title"><i class="bi bi-person"></i> Customer Information</div>
+            <div class="ivm-section-body">
+              <div class="ivm-field" style="margin-bottom:10px"><label>Customer Name</label><div class="ivm-val" id="ivm-customer"></div></div>
+              <div class="ivm-grid-2">
+                <div class="ivm-field"><label>Mobile / Phone</label><div class="ivm-val" id="ivm-phone"></div></div>
+                <div class="ivm-field"><label>GSTIN</label><div class="ivm-val" id="ivm-gstin"></div></div>
+              </div>
+              <div class="ivm-field" style="margin-top:10px"><label>Address</label><div class="ivm-val" id="ivm-address"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="ivm-section">
+          <div class="ivm-section-title"><i class="bi bi-table"></i> Invoice Items</div>
+          <div style="overflow-x:auto">
+            <table class="ivm-items-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>HSN</th>
+                  <th>Product</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Rate</th>
+                  <th class="num">Disc %</th>
+                  <th class="num">Tax</th>
+                  <th class="num">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="ivm-items-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="display:flex;justify-content:flex-end;margin-top:4px">
+          <div style="min-width:300px;border:1px solid var(--border);border-radius:8px;overflow:hidden">
+            <div style="background:var(--bg);padding:8px 14px;font-size:.8rem;font-weight:700;color:var(--text-muted);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">
+              <i class="bi bi-calculator"></i> Invoice Summary
+            </div>
+            <div style="padding:12px 16px">
+              <div class="summary-row"><span>Subtotal</span><span id="ivm-subtotal">₹0.00</span></div>
+              <div class="summary-row"><span id="ivm-tax-label">CGST + SGST</span><span id="ivm-tax">₹0.00</span></div>
+              <div class="summary-row"><span>Discount</span><span id="ivm-discount">₹0.00</span></div>
+              <div class="summary-row"><span>Round Off</span><span id="ivm-roundoff">₹0.00</span></div>
+              <div class="summary-row total"><span>Net Total</span><span id="ivm-net">₹0.00</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports - BillFlow</title>
+  <meta name="description" content="Business reports and analytics">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    /* ── Invoice View Modal ── */
+    .inv-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 24px 12px;
+    }
+    .inv-modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+    .inv-modal-box {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 980px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: inv-pop .18s ease;
+    }
+    @keyframes inv-pop { from { transform: scale(.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .inv-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .inv-modal-header h4 { margin: 0; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .inv-modal-header .inv-badge {
+      font-size: 0.75rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .inv-modal-actions { display: flex; gap: 8px; align-items: center; }
+    .inv-modal-body { padding: 20px 24px; }
+    /* read-only field display */
+    .ro-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .ro-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .ro-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+    .ro-full { margin-bottom: 12px; }
+    .ro-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 3px;
+    }
+    .ro-field .ro-val {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      color: var(--text);
+      min-height: 34px;
+      word-break: break-all;
+    }
+    .ro-section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .ro-section-title {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ro-section-body { padding: 14px; }
+    /* items table inside modal */
+    .inv-items-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .inv-items-table th {
+      background: var(--bg);
+      border-bottom: 2px solid var(--border);
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .inv-items-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 6px 8px;
+      vertical-align: top;
+    }
+    .inv-items-table tr:last-child td { border-bottom: none; }
+    .inv-items-table .num { text-align: right; }
+    /* summary box */
+    .inv-summary-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .inv-sum-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .inv-sum-row.total {
+      border-top: 1px solid var(--border);
+      margin-top: 6px;
+      padding-top: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .inv-sum-row span:last-child { font-weight: 600; color: var(--text); }
+    .inv-modal-row-click { cursor: pointer; }
+    .inv-modal-row-click:hover td { background: rgba(0,102,204,0.04); }
+    /* Return Note Modal */
+    .rn-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1001;
+      overflow-y: auto;
+      padding: 24px 12px;
+    }
+    .rn-modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+    .rn-modal-box {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: rn-pop .18s ease;
+    }
+    @keyframes rn-pop { from { transform: scale(.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .rn-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .rn-modal-header h4 { margin: 0; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .rn-badge {
+      font-size: 0.75rem;
+      background: var(--danger);
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .rn-modal-actions { display: flex; gap: 8px; align-items: center; }
+    .rn-modal-body { padding: 20px 24px; }
+    .ret-row-click { cursor: pointer; }
+    .ret-row-click:hover td { background: rgba(220,53,69,0.05); }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="top-navbar" id="top-navbar"></header>
+      <main class="content-area">
+
+        <div class="page-header">
+          <div>
+            <h1>Reports</h1>
+            <p>Business analytics and insights</p>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button class="btn btn-outline" id="btn-export-report"><i class="bi bi-download"></i> Export</button>
+          </div>
+        </div>
+
+        <!-- Report Type Tabs -->
+        <div class="tabs" id="report-tabs">
+          <button class="tab-btn active" onclick="showReport('sales')">Sales Report</button>
+          <button class="tab-btn" onclick="showReport('gst')">GST Report</button>
+          <button class="tab-btn" onclick="showReport('products')">Product Report</button>
+          <button class="tab-btn" onclick="showReport('customers')">Customer Report</button>
+          <button class="tab-btn" onclick="showReport('returns')">Product Return Report</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="card mb-20">
+          <div class="card-body" style="padding:12px 20px">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="form-group" style="margin:0">
+                <input type="text" class="form-control" id="rpt-from" placeholder="DD/MM/YYYY" style="width:160px;cursor:pointer">
+              </div>
+              <span class="text-muted">to</span>
+              <div class="form-group" style="margin:0">
+                <input type="text" class="form-control" id="rpt-to" placeholder="DD/MM/YYYY" style="width:160px;cursor:pointer">
+              </div>
+              <button class="btn btn-primary btn-sm" onclick="generateReport()" id="btn-generate-report"><i class="bi bi-funnel"></i> Generate</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Report Panel -->
+        <div id="panel-sales">
+          <div class="grid-4 mb-24">
+            <div class="stat-card">
+              <div class="stat-icon blue"><i class="bi bi-receipt"></i></div>
+              <div class="stat-value" id="rpt-total-invoices">0</div>
+              <div class="stat-label">Total Invoices</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon green"><i class="bi bi-currency-rupee"></i></div>
+              <div class="stat-value" id="rpt-total-sales">₹0</div>
+              <div class="stat-label">Total Sales</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon orange"><i class="bi bi-percent"></i></div>
+              <div class="stat-value" id="rpt-total-tax">₹0</div>
+              <div class="stat-label">Total Tax Collected</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon red"><i class="bi bi-graph-down"></i></div>
+              <div class="stat-value" id="rpt-avg-sale">₹0</div>
+              <div class="stat-label">Average Sale Value</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div class="card">
+              <div class="card-header"><h5>Monthly Sales Trend</h5></div>
+              <div class="card-body"><div class="chart-container"><canvas id="monthly-chart"></canvas></div></div>
+            </div>
+            <div class="card">
+              <div class="card-header"><h5>Daily Sales</h5></div>
+              <div class="card-body"><div class="chart-container"><canvas id="daily-chart"></canvas></div></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h5>Sales Details</h5></div>
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr><th>Invoice #</th><th>Date</th><th>Customer</th><th>Items</th><th>Subtotal</th><th>GST</th><th>Total</th></tr></thead>
+                <tbody id="sales-report-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- GST Report Panel -->
+        <div id="panel-gst" style="display:none">
+          <div class="card">
+            <div class="card-header"><h5>GST Summary</h5></div>
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr><th>Invoice #</th><th>Date</th><th>Customer</th><th>GSTIN</th><th>Taxable Value</th><th>CGST</th><th>SGST</th><th>Total Tax</th><th>Invoice Total</th></tr></thead>
+                <tbody id="gst-report-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Report Panel -->
+        <div id="panel-products" style="display:none">
+          <div class="card">
+            <div class="card-header"><h5>Product Sales Summary</h5></div>
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr><th>Product</th><th>Category</th><th>Total Qty Sold</th><th>Total Revenue</th><th>Current Stock</th></tr></thead>
+                <tbody id="product-report-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Report Panel -->
+        <div id="panel-customers" style="display:none">
+          <div class="card">
+            <div class="card-header"><h5>Customer Purchase Summary</h5></div>
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr><th>Customer</th><th>GSTIN</th><th>Total Invoices</th><th>Total Purchases</th></tr></thead>
+                <tbody id="customer-report-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Return Report Panel -->
+        <div id="panel-returns" style="display:none">
+          <div class="card">
+            <div class="card-header"><h5>Product Return Summary</h5></div>
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead><tr><th>Return #</th><th>Date</th><th>Invoice Ref</th><th>Customer</th><th>Reason</th><th>Items</th><th>Refund Amount</th></tr></thead>
+                <tbody id="return-report-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    Components.init('Reports');
+
+    let currentReport = 'sales';
+
+    // Flatpickr date pickers — display DD/MM/YYYY, value stored as YYYY-MM-DD
+    const fpFrom = flatpickr('#rpt-from', {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd/m/Y',
+      defaultDate: '2025-05-01',
+      allowInput: true
+    });
+    const fpTo = flatpickr('#rpt-to', {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd/m/Y',
+      defaultDate: Utils.today(),
+      allowInput: true
+    });
+
+    function showReport(type) {
+      currentReport = type;
+      ['sales', 'gst', 'products', 'customers', 'returns'].forEach(t => {
+        document.getElementById('panel-' + t).style.display = t === type ? 'block' : 'none';
+      });
+      document.querySelectorAll('#report-tabs .tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['sales', 'gst', 'products', 'customers', 'returns'][i] === type);
+      });
+      generateReport();
+    }
+
+    function generateReport() {
+      const fromDate = document.getElementById('rpt-from').value; // YYYY-MM-DD
+      const toDate = document.getElementById('rpt-to').value;     // YYYY-MM-DD
+
+      // Filter invoices by date range
+      let invoices = Store.getInvoices();
+      if (fromDate) invoices = invoices.filter(inv => inv.date >= fromDate);
+      if (toDate) invoices = invoices.filter(inv => inv.date <= toDate);
+
+      // Filter returns by date range
+      let returns = Array.isArray(Store.getReturns()) ? Store.getReturns() : [];
+      if (fromDate) returns = returns.filter(r => r.date >= fromDate);
+      if (toDate) returns = returns.filter(r => r.date <= toDate);
+
+      if (currentReport === 'sales') renderSalesReport(invoices);
+      else if (currentReport === 'gst') renderGSTReport(invoices);
+      else if (currentReport === 'products') renderProductReport(invoices);
+      else if (currentReport === 'customers') renderCustomerReport(invoices);
+      else if (currentReport === 'returns') renderReturnReport(returns);
+    }
+
+    function renderSalesReport(invoices) {
+      const totalSales = invoices.reduce((s, i) => s + i.netTotal, 0);
+      const totalTax = invoices.reduce((s, i) => s + i.cgst + i.sgst, 0);
+      document.getElementById('rpt-total-invoices').textContent = invoices.length;
+      document.getElementById('rpt-total-sales').textContent = Utils.currency(totalSales);
+      document.getElementById('rpt-total-tax').textContent = Utils.currency(totalTax);
+      document.getElementById('rpt-avg-sale').textContent = Utils.currency(invoices.length ? totalSales / invoices.length : 0);
+
+      document.getElementById('sales-report-body').innerHTML = invoices.length ?
+        invoices.map(inv =>
+          `<tr class="inv-modal-row-click" onclick="viewInvoice(${inv.id})" title="Click to view invoice">
+            <td><strong style="color:var(--primary)">${inv.number}</strong></td>
+            <td>${Utils.formatDate(inv.date)}</td>
+            <td>${inv.customerName}</td>
+            <td>${inv.items.length}</td>
+            <td>${Utils.currency(inv.subtotal)}</td>
+            <td>${Utils.currency(inv.cgst + inv.sgst)}</td>
+            <td><strong>${Utils.currency(inv.netTotal)}</strong></td>
+          </tr>`
+        ).join('') :
+        '<tr><td colspan="7" class="text-center text-muted" style="padding:32px">No sales data</td></tr>';
+
+      // Charts
+      if (window.monthlyChartInstance) window.monthlyChartInstance.destroy();
+      window.monthlyChartInstance = new Chart(document.getElementById('monthly-chart'), {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+          datasets: [{ label: 'Sales (₹)', data: [45000, 52000, 38000, 61000, totalSales], backgroundColor: '#0066cc', borderRadius: 6 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => '₹' + (v/1000) + 'K' } } } }
+      });
+
+      if (window.dailyChartInstance) window.dailyChartInstance.destroy();
+      window.dailyChartInstance = new Chart(document.getElementById('daily-chart'), {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{ label: 'Daily Sales', data: [7928, 22028, 4725, 0, 0, 0, 0], borderColor: '#3399ff', backgroundColor: 'rgba(51,153,255,0.1)', fill: true, tension: 0.4, pointRadius: 4 }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    function renderGSTReport(invoices) {
+      const tbody = document.getElementById('gst-report-body');
+      tbody.innerHTML = invoices.map(inv => {
+        const customer = Store.getCustomerById(inv.customerId);
+        return `
+          <tr>
+            <td><strong>${inv.number}</strong></td>
+            <td>${Utils.formatDate(inv.date)}</td>
+            <td>${inv.customerName}</td>
+            <td><code style="font-size:0.7rem">${customer?.gstin || 'N/A'}</code></td>
+            <td>${Utils.currency(inv.subtotal)}</td>
+            <td>${Utils.currency(inv.cgst)}</td>
+            <td>${Utils.currency(inv.sgst)}</td>
+            <td><strong>${Utils.currency(inv.cgst + inv.sgst)}</strong></td>
+            <td><strong>${Utils.currency(inv.netTotal)}</strong></td>
+          </tr>
+        `;
+      }).join('') || '<tr><td colspan="9" class="text-center text-muted" style="padding:32px">No data</td></tr>';
+    }
+
+    function renderProductReport(invoices) {
+      const productMap = {};
+      invoices.forEach(inv => {
+        inv.items.forEach(item => {
+          if (!productMap[item.name]) productMap[item.name] = { name: item.name, qty: 0, revenue: 0 };
+          productMap[item.name].qty += item.qty;
+          productMap[item.name].revenue += item.amount;
+        });
+      });
+      const tbody = document.getElementById('product-report-body');
+      const entries = Object.values(productMap);
+      tbody.innerHTML = entries.length ?
+        entries.map(p => {
+          const prod = Store.getProducts().find(pr => pr.name === p.name);
+          return `<tr><td><strong>${p.name}</strong></td><td>${prod?.category || '—'}</td><td>${p.qty}</td><td><strong>${Utils.currency(p.revenue)}</strong></td><td>${prod?.stock || '—'}</td></tr>`;
+        }).join('') :
+        '<tr><td colspan="5" class="text-center text-muted" style="padding:32px">No data</td></tr>';
+    }
+
+    function renderCustomerReport(invoices) {
+      const custMap = {};
+      invoices.forEach(inv => {
+        if (!custMap[inv.customerName]) custMap[inv.customerName] = { name: inv.customerName, customerId: inv.customerId, count: 0, total: 0 };
+        custMap[inv.customerName].count++;
+        custMap[inv.customerName].total += inv.netTotal;
+      });
+      const tbody = document.getElementById('customer-report-body');
+      const entries = Object.values(custMap);
+      tbody.innerHTML = entries.length ?
+        entries.map(c => {
+          const cust = Store.getCustomerById(c.customerId);
+          return `<tr><td><strong>${c.name}</strong></td><td><code style="font-size:0.7rem">${cust?.gstin || 'N/A'}</code></td><td>${c.count}</td><td><strong>${Utils.currency(c.total)}</strong></td></tr>`;
+        }).join('') :
+        '<tr><td colspan="4" class="text-center text-muted" style="padding:32px">No data</td></tr>';
+    }
+
+    function renderReturnReport(returns) {
+      const tbody = document.getElementById('return-report-body');
+      tbody.innerHTML = returns.length ?
+        returns.map(r => `
+          <tr class="ret-row-click" onclick="viewReturnNote(${r.id})" title="Click to view return details">
+            <td><strong style="color:var(--danger)">${r.number}</strong></td>
+            <td>${Utils.formatDate(r.date)}</td>
+            <td><span class="badge badge-primary">${r.invoiceRef}</span></td>
+            <td>${r.customerName}</td>
+            <td>${r.reason}</td>
+            <td>${r.items.length}</td>
+            <td><strong style="color:var(--danger)">${Utils.currency(r.refundTotal)}</strong></td>
+          </tr>
+        `).join('') :
+        '<tr><td colspan="7" class="text-center text-muted" style="padding:32px">No returns data</td></tr>';
+    }
+
+    document.getElementById('btn-export-report').addEventListener('click', () => {
+      Utils.showToast('Export feature will be available in Phase 2');
+    });
+
+    generateReport();
+
+    /* ── Invoice View Modal ── */
+    function viewInvoice(id) {
+      const inv = Store.getInvoiceById(id);
+      if (!inv) return;
+      const customer = inv.customer || Store.getCustomerById(inv.customerId) || {};
+      const fmtNum = (n) => Number(n || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const isIntra = (inv.supplyType || 'Intra-State') === 'Intra-State';
+
+      // Header
+      document.getElementById('ivm-number').textContent = inv.number || '';
+      document.getElementById('ivm-number-val').textContent = inv.number || '';
+      document.getElementById('ivm-date').textContent = Utils.formatDate(inv.date);
+      document.getElementById('ivm-agent').textContent = inv.agent || 'Self';
+      document.getElementById('ivm-supply').textContent = inv.supplyType || 'Intra-State';
+      document.getElementById('ivm-customer').textContent = customer.name || inv.customerName || '';
+      document.getElementById('ivm-gstin').textContent = customer.gstin || 'N/A';
+      document.getElementById('ivm-phone').textContent = customer.mobile ? customer.mobile + (customer.mobile2 ? ', ' + customer.mobile2 : '') : '—';
+      const addrParts = [customer.address, customer.district, customer.taluk, customer.state, customer.pincode].filter(Boolean);
+      document.getElementById('ivm-address').textContent = addrParts.join(', ') || '—';
+
+      // Items table
+      const th_cgst = document.getElementById('ivm-th-cgst');
+      const th_sgst = document.getElementById('ivm-th-sgst');
+      const th_igst = document.getElementById('ivm-th-igst');
+      th_cgst.style.display = isIntra ? '' : 'none';
+      th_sgst.style.display = isIntra ? '' : 'none';
+      th_igst.style.display = isIntra ? 'none' : '';
+
+      let totalTaxable = 0, totalCGST = 0, totalSGST = 0, totalIGST = 0, totalQty = 0;
+      const tbody = document.getElementById('ivm-items-body');
+      tbody.innerHTML = inv.items.map((item, i) => {
+        const gst = item.gst || 0;
+        const cgstRate = item.cgstRate !== undefined ? item.cgstRate : gst / 2;
+        const sgstRate = item.sgstRate !== undefined ? item.sgstRate : gst / 2;
+        const igstRate = item.igstRate !== undefined ? item.igstRate : gst;
+        const gross = (item.qty || 0) * (item.rate || 0);
+        const discAmt = gross * ((item.discount || 0) / 100);
+        const taxable = gross - discAmt;
+        const cgst = isIntra ? (taxable * cgstRate / 100) : 0;
+        const sgst = isIntra ? (taxable * sgstRate / 100) : 0;
+        const igst = isIntra ? 0 : (taxable * igstRate / 100);
+        const lineTotal = taxable + cgst + sgst + igst;
+        totalTaxable += taxable; totalCGST += cgst; totalSGST += sgst; totalIGST += igst;
+        totalQty += (item.qty || 0);
+        const taxCell = isIntra
+          ? `<td class="num">${fmtNum(cgst)}</td><td class="num" style="display:''">${fmtNum(sgst)}</td><td class="num" style="display:none">—</td>`
+          : `<td class="num" style="display:none">—</td><td class="num" style="display:none">—</td><td class="num">${fmtNum(igst)}</td>`;
+        return `<tr>
+          <td>${i + 1}</td>
+          <td>${item.hsn || '—'}</td>
+          <td><strong>${item.size ? item.name + ' - ' + item.size : item.name}</strong></td>
+          <td class="num">${item.qty}</td>
+          <td class="num">${fmtNum(item.rate)}</td>
+          <td class="num">${item.discount || 0}%</td>
+          <td class="num">${fmtNum(taxable)}</td>
+          <td class="num">${gst}%</td>
+          ${taxCell}
+          <td class="num"><strong>${fmtNum(lineTotal)}</strong></td>
+        </tr>`;
+      }).join('');
+
+      // Summary
+      const totalTax = isIntra ? (totalCGST + totalSGST) : totalIGST;
+      const netAmtCalc = totalTaxable + totalTax;
+      const netTotal = inv.netTotal != null ? inv.netTotal : Math.round(netAmtCalc);
+      const roundOff = inv.roundOff != null ? inv.roundOff : (netTotal - netAmtCalc);
+
+      const sumCgstRow = document.getElementById('ivm-sum-cgst-row');
+      const sumSgstRow = document.getElementById('ivm-sum-sgst-row');
+      const sumIgstRow = document.getElementById('ivm-sum-igst-row');
+      sumCgstRow.style.display = isIntra ? '' : 'none';
+      sumSgstRow.style.display = isIntra ? '' : 'none';
+      sumIgstRow.style.display = isIntra ? 'none' : '';
+      document.getElementById('ivm-sum-subtotal').textContent = '₹' + fmtNum(totalTaxable);
+      document.getElementById('ivm-sum-cgst').textContent = '₹' + fmtNum(totalCGST);
+      document.getElementById('ivm-sum-sgst').textContent = '₹' + fmtNum(totalSGST);
+      document.getElementById('ivm-sum-igst').textContent = '₹' + fmtNum(totalIGST);
+      document.getElementById('ivm-sum-roundoff').textContent = Math.abs(roundOff) >= 0.01 ? (roundOff >= 0 ? '+' : '') + fmtNum(roundOff) : '—';
+      document.getElementById('ivm-sum-total').textContent = '₹' + fmtNum(netTotal);
+
+      // Store for print
+      window._viewingInvoice = inv;
+      document.getElementById('invoice-view-modal').classList.add('active');
+    }
+
+    function closeInvoiceModal() {
+      document.getElementById('invoice-view-modal').classList.remove('active');
+      window._viewingInvoice = null;
+    }
+
+    function printViewedInvoice() {
+      if (!window._viewingInvoice) return;
+      sessionStorage.setItem('printInvoice', JSON.stringify(window._viewingInvoice));
+      window.open('print/invoice-print.html', '_blank');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('invoice-view-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeInvoiceModal();
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeInvoiceModal();
+    });
+
+    /* ── Return Note View Modal ── */
+    function viewReturnNote(id) {
+      const r = Store.getReturns().find(ret => ret.id === id);
+      if (!r) return;
+
+      document.getElementById('rn-number').textContent = r.number;
+      document.getElementById('rn-number-val').textContent = r.number;
+      document.getElementById('rn-date').textContent = Utils.formatDate(r.date);
+      document.getElementById('rn-invoice').textContent = r.invoiceRef;
+      document.getElementById('rn-reason').textContent = r.reason;
+      document.getElementById('rn-customer').textContent = r.customerName;
+
+      // Additional customer details
+      const cust = Store.getCustomerById(r.customerId);
+      if (cust) {
+        document.getElementById('rn-cust-mobile').textContent = cust.mobile || '-';
+        document.getElementById('rn-cust-gstin').textContent = cust.gstin || 'Unregistered';
+        
+        let addrParts = [];
+        if (cust.address) addrParts.push(cust.address);
+        if (cust.taluk) addrParts.push(cust.taluk);
+        if (cust.district) addrParts.push(cust.district);
+        if (cust.state) addrParts.push(cust.state);
+        if (cust.pincode) addrParts.push(cust.pincode);
+        
+        document.getElementById('rn-cust-address').textContent = addrParts.join(', ') || '-';
+      } else {
+        document.getElementById('rn-cust-mobile').textContent = '-';
+        document.getElementById('rn-cust-gstin').textContent = '-';
+        document.getElementById('rn-cust-address').textContent = 'Customer details unavailable (deleted)';
+      }
+
+      let subtotal = 0;
+      document.getElementById('rn-items-body').innerHTML = r.items.map((item, idx) => {
+        const lineTotal = item.qty * item.rate;
+        subtotal += lineTotal;
+        return `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><strong>${item.name}</strong></td>
+            <td class="num">${item.qty}</td>
+            <td class="num">${Utils.currency(item.rate)}</td>
+            <td class="num">${Utils.currency(item.amount || lineTotal)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const gst = Math.max(0, r.refundTotal - subtotal);
+      document.getElementById('rn-subtotal').textContent = Utils.currency(subtotal);
+      document.getElementById('rn-gst').textContent = Utils.currency(gst);
+      document.getElementById('rn-total').textContent = Utils.currency(r.refundTotal);
+
+      document.getElementById('return-note-modal').classList.add('active');
+    }
+
+    function closeReturnNote() {
+      document.getElementById('return-note-modal').classList.remove('active');
+    }
+  </script>
+
+  <!-- ── Invoice View Modal ── -->
+  <div class="inv-modal-overlay" id="invoice-view-modal">
+    <div class="inv-modal-box">
+      <div class="inv-modal-header">
+        <h4>
+          <i class="bi bi-receipt" style="color:var(--primary)"></i>
+          Invoice Preview
+          <span class="inv-badge" id="ivm-number"></span>
+        </h4>
+        <div class="inv-modal-actions">
+          <button class="btn btn-primary btn-sm" onclick="printViewedInvoice()">
+            <i class="bi bi-printer"></i> Print
+          </button>
+          <button class="btn btn-outline btn-sm" onclick="closeInvoiceModal()">
+            <i class="bi bi-x-lg"></i> Close
+          </button>
+        </div>
+      </div>
+      <div class="inv-modal-body">
+
+        <!-- Info + Customer -->
+        <div class="ro-grid-2">
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-info-circle"></i> Invoice Information</div>
+            <div class="ro-section-body">
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Invoice Number</label><div class="ro-val" id="ivm-number-val"></div></div>
+                <div class="ro-field"><label>Date</label><div class="ro-val" id="ivm-date"></div></div>
+              </div>
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Agent</label><div class="ro-val" id="ivm-agent"></div></div>
+                <div class="ro-field"><label>Supply Type</label><div class="ro-val" id="ivm-supply"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-person"></i> Customer Information</div>
+            <div class="ro-section-body">
+              <div class="ro-full ro-field"><label>Customer Name</label><div class="ro-val" id="ivm-customer"></div></div>
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>GSTIN</label><div class="ro-val" id="ivm-gstin"></div></div>
+                <div class="ro-field"><label>Phone</label><div class="ro-val" id="ivm-phone"></div></div>
+              </div>
+              <div class="ro-full ro-field"><label>Address</label><div class="ro-val" id="ivm-address"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="ro-section">
+          <div class="ro-section-title"><i class="bi bi-table"></i> Invoice Items</div>
+          <div style="overflow-x:auto">
+            <table class="inv-items-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>HSN</th>
+                  <th>Product</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Rate</th>
+                  <th class="num">Disc%</th>
+                  <th class="num">Taxable</th>
+                  <th class="num">GST%</th>
+                  <th class="num" id="ivm-th-cgst">CGST</th>
+                  <th class="num" id="ivm-th-sgst">SGST</th>
+                  <th class="num" id="ivm-th-igst" style="display:none">IGST</th>
+                  <th class="num">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="ivm-items-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="display:flex;justify-content:flex-end">
+          <div class="inv-summary-box" style="min-width:300px">
+            <div class="inv-sum-row"><span>Subtotal</span><span id="ivm-sum-subtotal">₹0.00</span></div>
+            <div class="inv-sum-row" id="ivm-sum-cgst-row"><span>CGST</span><span id="ivm-sum-cgst">₹0.00</span></div>
+            <div class="inv-sum-row" id="ivm-sum-sgst-row"><span>SGST</span><span id="ivm-sum-sgst">₹0.00</span></div>
+            <div class="inv-sum-row" id="ivm-sum-igst-row" style="display:none"><span>IGST</span><span id="ivm-sum-igst">₹0.00</span></div>
+            <div class="inv-sum-row"><span>Round Off</span><span id="ivm-sum-roundoff">—</span></div>
+            <div class="inv-sum-row total"><span>Net Total</span><span id="ivm-sum-total">₹0.00</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Return Note View Modal ── -->
+  <div class="rn-modal-overlay" id="return-note-modal">
+    <div class="rn-modal-box">
+      <div class="rn-modal-header">
+        <h4>
+          <i class="bi bi-arrow-return-left" style="color:var(--danger)"></i>
+          Product Return Note Details
+          <span class="rn-badge" id="rn-number"></span>
+        </h4>
+        <div class="rn-modal-actions">
+          <button class="btn btn-outline btn-sm" onclick="closeReturnNote()">
+            <i class="bi bi-x-lg"></i> Close
+          </button>
+        </div>
+      </div>
+      <div class="rn-modal-body">
+
+        <!-- Info + Customer -->
+        <div class="ro-grid-2">
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-info-circle"></i> Return Information</div>
+            <div class="ro-section-body">
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Return Number</label><div class="ro-val" id="rn-number-val"></div></div>
+                <div class="ro-field"><label>Date</label><div class="ro-val" id="rn-date"></div></div>
+              </div>
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Invoice Ref</label><div class="ro-val" id="rn-invoice"></div></div>
+                <div class="ro-field"><label>Return Reason</label><div class="ro-val" id="rn-reason"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-person"></i> Customer Information</div>
+            <div class="ro-section-body">
+              <div class="ro-full ro-field"><label>Customer Name</label><div class="ro-val" id="rn-customer"></div></div>
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Mobile / Phone</label><div class="ro-val" id="rn-cust-mobile">-</div></div>
+                <div class="ro-field"><label>GSTIN</label><div class="ro-val" id="rn-cust-gstin">-</div></div>
+              </div>
+              <div class="ro-full ro-field" style="margin-top:12px"><label>Address</label><div class="ro-val" id="rn-cust-address">-</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="ro-section">
+          <div class="ro-section-title"><i class="bi bi-table"></i> Returned Items</div>
+          <div style="overflow-x:auto">
+            <table class="inv-items-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Product</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Rate</th>
+                  <th class="num">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="rn-items-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Refund Summary -->
+        <div style="display:flex;justify-content:flex-end;margin-top:10px">
+          <div class="inv-summary-box" style="min-width:280px">
+            <div class="inv-sum-row"><span>Return Subtotal</span><span id="rn-subtotal">₹0.00</span></div>
+            <div class="inv-sum-row"><span>GST</span><span id="rn-gst">₹0.00</span></div>
+            <div class="inv-sum-row total"><span>Refund Total</span><span id="rn-total" style="color:var(--danger)">₹0.00</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

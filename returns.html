@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Return - BillFlow</title>
+  <meta name="description" content="Manage product returns">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+    /* ── Return View Modal ── */
+    .ret-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 24px 12px;
+    }
+    .ret-modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+    .ret-modal-box {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 800px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      overflow: hidden;
+      animation: ret-pop .18s ease;
+    }
+    @keyframes ret-pop { from { transform: scale(.97); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .ret-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .ret-modal-header h4 { margin: 0; font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+    .ret-modal-header .ret-badge {
+      font-size: 0.75rem;
+      background: var(--danger);
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .ret-modal-actions { display: flex; gap: 8px; align-items: center; }
+    .ret-modal-body { padding: 20px 24px; }
+    /* read-only field display */
+    .ro-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .ro-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .ro-full { margin-bottom: 12px; }
+    .ro-field label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-bottom: 3px;
+    }
+    .ro-field .ro-val {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      color: var(--text);
+      min-height: 34px;
+      word-break: break-all;
+    }
+    .ro-section {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+    .ro-section-title {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .ro-section-body { padding: 14px; }
+    /* items table inside modal */
+    .ret-items-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .ret-items-table th {
+      background: var(--bg);
+      border-bottom: 2px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+    .ret-items-table td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      color: var(--text);
+    }
+    .ret-items-table th.num, .ret-items-table td.num { text-align: right; }
+    /* Hover effect for clickable rows */
+    .clickable-row { cursor: pointer; transition: background-color 0.15s ease; }
+    .clickable-row:hover { background-color: var(--primary-bg) !important; }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="main-content">
+      <header class="top-navbar" id="top-navbar"></header>
+      <main class="content-area">
+
+        <div class="page-header">
+          <div>
+            <h1>Product Return</h1>
+            <p>Create product return notes and view return history</p>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showTab('create')" id="tab-create">Create Product Return</button>
+          <button class="tab-btn" onclick="showTab('history')" id="tab-history">Return History</button>
+        </div>
+
+        <!-- Create Return Tab -->
+        <div id="panel-create">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+            <div class="invoice-section">
+              <div class="section-title"><i class="bi bi-info-circle"></i> Return Information</div>
+              <div class="section-body">
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="ret-number">Return Number</label>
+                    <input type="text" class="form-control" id="ret-number" readonly style="background:var(--bg)">
+                  </div>
+                  <div class="form-group">
+                    <label for="ret-date">Return Date</label>
+                    <input type="text" class="form-control" id="ret-date" placeholder="DD/MM/YYYY" style="cursor:pointer">
+                  </div>
+                </div>
+                <div class="grid-2">
+                  <div class="form-group">
+                    <label for="ret-invoice">Reference Invoice</label>
+                    <select class="form-control" id="ret-invoice" onchange="onInvoiceSelect()">
+                      <option value="">-- Select Invoice --</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="ret-reason">Return Reason</label>
+                    <select class="form-control" id="ret-reason" onchange="toggleOtherReason()">
+                      <option value="Defective product">Defective product</option>
+                      <option value="Wrong item delivered">Wrong item delivered</option>
+                      <option value="Size/fit issue">Size/fit issue</option>
+                      <option value="Customer changed mind">Customer changed mind</option>
+                      <option value="Quality issue">Quality issue</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" id="other-reason-group" style="display:none">
+                  <label for="ret-other-reason">Specify Reason *</label>
+                  <input type="text" class="form-control" id="ret-other-reason" placeholder="Enter the return reason...">
+                </div>
+              </div>
+            </div>
+            
+            <div class="invoice-section">
+              <div class="section-title"><i class="bi bi-person"></i> Customer</div>
+              <div class="section-body">
+                <div class="form-group">
+                  <label>Customer Name</label>
+                  <input type="text" class="form-control" id="ret-customer" readonly style="background:var(--bg)">
+                </div>
+                <div class="form-group">
+                  <label>Original Invoice Amount</label>
+                  <input type="text" class="form-control" id="ret-inv-amount" readonly style="background:var(--bg)">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return Items -->
+          <div class="invoice-section">
+            <div class="section-title"><i class="bi bi-box-arrow-left"></i> Select Items to Return</div>
+            <div style="padding:0">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Select</th><th>Product</th><th>Orig Qty</th><th>Return Qty</th><th>Rate</th><th>Amount</th></tr>
+                </thead>
+                <tbody id="return-items-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px">
+            <!-- Inventory Toggle -->
+            <div class="invoice-section">
+              <div class="section-title"><i class="bi bi-boxes"></i> Inventory Restock</div>
+              <div class="section-body">
+                <p class="text-sm text-muted" style="margin-bottom:12px">Should the returned products be added back to inventory stock?</p>
+                <div style="display:flex;gap:12px;align-items:center">
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
+                    <input type="radio" name="add-to-inventory" id="inv-yes" value="yes" checked style="width:16px;height:16px;cursor:pointer">
+                    <span style="color:var(--success, #16a34a)"><i class="bi bi-plus-circle"></i> Yes, add to inventory</span>
+                  </label>
+                  <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600">
+                    <input type="radio" name="add-to-inventory" id="inv-no" value="no" style="width:16px;height:16px;cursor:pointer">
+                    <span style="color:var(--danger)"><i class="bi bi-x-circle"></i> No, do not restock</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="invoice-section">
+              <div class="section-body">
+                <div class="invoice-summary">
+                  <div class="summary-row"><span>Return Subtotal</span><span id="ret-subtotal">₹0.00</span></div>
+                  <div class="summary-row"><span>GST</span><span id="ret-gst">₹0.00</span></div>
+                  <div class="summary-row total"><span>Refund Total</span><span id="ret-total">₹0.00</span></div>
+                </div>
+                <div style="margin-top:16px;text-align:right">
+                  <button class="btn btn-primary" onclick="saveReturn()" id="btn-save-return"><i class="bi bi-check-lg"></i> Save Product Return</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="panel-history" style="display:none">
+          <div class="card">
+            <div class="card-body" style="padding:0">
+              <table class="data-table">
+                <thead>
+                  <tr><th>Return #</th><th>Date</th><th>Invoice Ref</th><th>Customer</th><th>Reason</th><th>Refund</th></tr>
+                </thead>
+                <tbody id="return-history-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/js/store.js"></script>
+  <script src="assets/js/utils.js"></script>
+  <script src="assets/js/components.js"></script>
+  <script>
+    Components.init('Returns');
+
+    function toggleOtherReason() {
+      const sel = document.getElementById('ret-reason').value;
+      const grp = document.getElementById('other-reason-group');
+      const inp = document.getElementById('ret-other-reason');
+      if (sel === 'Other') {
+        grp.style.display = 'block';
+        inp.required = true;
+      } else {
+        grp.style.display = 'none';
+        inp.required = false;
+        inp.value = '';
+      }
+    }
+
+    document.getElementById('ret-number').value = Store.getNextReturnNumber();
+
+    // Flatpickr — DD/MM/YYYY display, YYYY-MM-DD stored internally
+    flatpickr('#ret-date', {
+      dateFormat: 'Y-m-d',
+      altInput: true,
+      altFormat: 'd/m/Y',
+      defaultDate: Utils.today(),
+      allowInput: true
+    });
+
+    // Populate invoices
+    const invSelect = document.getElementById('ret-invoice');
+    Store.getInvoices().forEach(inv => {
+      invSelect.innerHTML += `<option value="${inv.id}">${inv.number} - ${inv.customerName}</option>`;
+    });
+
+    let selectedInvoice = null;
+
+    function showTab(tab) {
+      document.getElementById('panel-create').style.display = tab === 'create' ? 'block' : 'none';
+      document.getElementById('panel-history').style.display = tab === 'history' ? 'block' : 'none';
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      if (tab === 'history') renderHistory();
+    }
+
+    function onInvoiceSelect() {
+      const id = Number(document.getElementById('ret-invoice').value);
+      selectedInvoice = Store.getInvoiceById(id);
+      if (!selectedInvoice) {
+        document.getElementById('return-items-body').innerHTML = '';
+        document.getElementById('ret-customer').value = '';
+        document.getElementById('ret-inv-amount').value = '';
+        return;
+      }
+      document.getElementById('ret-customer').value = selectedInvoice.customerName;
+      document.getElementById('ret-inv-amount').value = Utils.currency(selectedInvoice.netTotal);
+
+      // Calculate already returned quantities for this invoice
+      const returnsForInvoice = Store.getReturns().filter(r => r.invoiceRef === selectedInvoice.number);
+      const returnedQtys = {};
+      returnsForInvoice.forEach(r => {
+        r.items.forEach(item => {
+          const key = item.productId || item.name;
+          returnedQtys[key] = (returnedQtys[key] || 0) + item.qty;
+        });
+      });
+
+      let hasReturnableItems = false;
+      const tbody = document.getElementById('return-items-body');
+      
+      const rows = selectedInvoice.items.map((item, i) => {
+        const key = item.productId || item.name;
+        const alreadyReturned = returnedQtys[key] || 0;
+        const availableQty = item.qty - alreadyReturned;
+        
+        if (availableQty <= 0) return ''; // Completely returned
+        
+        hasReturnableItems = true;
+        return `
+          <tr>
+            <td><input type="checkbox" class="ret-check" data-index="${i}" onchange="calcReturnTotal()"></td>
+            <td>
+              ${item.name}
+              ${alreadyReturned > 0 ? `<div style="font-size:10px;color:var(--danger)">(${alreadyReturned} previously returned)</div>` : ''}
+            </td>
+            <td>${availableQty} <span style="font-size:10px;color:var(--text-muted)">(of ${item.qty})</span></td>
+            <td><input type="number" class="form-control ret-qty" data-index="${i}" value="1" min="1" max="${availableQty}" style="width:80px;padding:4px 8px" onchange="calcReturnTotal()" onkeyup="calcReturnTotal()"></td>
+            <td>${Utils.currency(item.rate)}</td>
+            <td class="ret-line-amt" data-index="${i}">₹0.00</td>
+          </tr>
+        `;
+      }).join('');
+
+      if (!hasReturnableItems) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:24px">All items in this invoice have been completely returned.</td></tr>';
+      } else {
+        tbody.innerHTML = rows;
+      }
+      
+      calcReturnTotal();
+    }
+
+    function calcReturnTotal() {
+      if (!selectedInvoice) return;
+      let subtotal = 0, totalGST = 0;
+      document.querySelectorAll('.ret-check:checked').forEach(cb => {
+        const i = cb.dataset.index;
+        const item = selectedInvoice.items[i];
+        const qty = Number(document.querySelector(`.ret-qty[data-index="${i}"]`).value);
+        const lineTotal = qty * item.rate;
+        const gst = Utils.calculateGST(lineTotal, item.gst);
+        subtotal += lineTotal;
+        totalGST += gst.total;
+        document.querySelector(`.ret-line-amt[data-index="${i}"]`).textContent = Utils.currency(lineTotal + gst.total);
+      });
+      document.getElementById('ret-subtotal').textContent = Utils.currency(subtotal);
+      document.getElementById('ret-gst').textContent = Utils.currency(totalGST);
+      document.getElementById('ret-total').textContent = Utils.currency(subtotal + totalGST);
+    }
+
+    function saveReturn() {
+      if (!selectedInvoice) { Utils.showToast('Select an invoice', 'error'); return; }
+      const checked = document.querySelectorAll('.ret-check:checked');
+      if (!checked.length) { Utils.showToast('Select items to return', 'error'); return; }
+
+      const reasonSel = document.getElementById('ret-reason').value;
+      let finalReason = reasonSel;
+      if (reasonSel === 'Other') {
+        const otherText = document.getElementById('ret-other-reason').value.trim();
+        if (!otherText) { Utils.showToast('Please specify the return reason', 'error'); return; }
+        finalReason = otherText;
+      }
+
+      const addToInventory = document.querySelector('input[name="add-to-inventory"]:checked').value === 'yes';
+
+      const items = [];
+      let refundTotal = 0;
+      checked.forEach(cb => {
+        const i = cb.dataset.index;
+        const item = selectedInvoice.items[i];
+        const qty = Number(document.querySelector(`.ret-qty[data-index="${i}"]`).value);
+        const lineTotal = qty * item.rate;
+        const gst = Utils.calculateGST(lineTotal, item.gst);
+        items.push({ productId: item.productId, name: item.name, qty, rate: item.rate, amount: lineTotal + gst.total });
+        refundTotal += lineTotal + gst.total;
+
+        // Restock inventory if chosen
+        if (addToInventory && item.productId) {
+          const prod = Store.getProductById(item.productId);
+          if (prod) {
+            Store.updateProduct(item.productId, { stock: (prod.stock || 0) + qty });
+          }
+        }
+      });
+
+      Store.addReturn({
+        date: document.getElementById('ret-date').value,
+        invoiceRef: selectedInvoice.number,
+        customerId: selectedInvoice.customerId,
+        customerName: selectedInvoice.customerName,
+        reason: finalReason,
+        addedToInventory: addToInventory,
+        items,
+        refundTotal: Math.round(refundTotal)
+      });
+
+      Utils.showToast(addToInventory ? 'Product return saved & stock restocked' : 'Product return saved (no restock)');
+      document.getElementById('ret-number').value = Store.getNextReturnNumber();
+      document.getElementById('ret-invoice').value = '';
+      document.getElementById('return-items-body').innerHTML = '';
+      document.getElementById('ret-customer').value = '';
+      document.getElementById('ret-inv-amount').value = '';
+      document.getElementById('ret-subtotal').textContent = '₹0.00';
+      document.getElementById('ret-gst').textContent = '₹0.00';
+      document.getElementById('ret-total').textContent = '₹0.00';
+      document.getElementById('ret-reason').value = 'Defective product';
+      document.getElementById('other-reason-group').style.display = 'none';
+      document.getElementById('ret-other-reason').value = '';
+      document.getElementById('inv-yes').checked = true;
+      selectedInvoice = null;
+
+      // Switch to history tab automatically so user sees the newly added record
+      showTab('history');
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('return-history-body');
+      const returns = Store.getReturns();
+      if (!returns.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:32px">No product returns yet</td></tr>';
+        return;
+      }
+      tbody.innerHTML = returns.map(r => `
+        <tr class="clickable-row" onclick="viewReturn(${r.id})" title="Click to view details">
+          <td><strong>${r.number}</strong></td>
+          <td>${Utils.formatDate(r.date)}</td>
+          <td><span class="badge badge-primary">${r.invoiceRef}</span></td>
+          <td>${r.customerName}</td>
+          <td>${r.reason}</td>
+          <td><strong style="color:var(--danger)">${Utils.currency(r.refundTotal)}</strong></td>
+        </tr>
+      `).join('');
+    }
+
+    function viewReturn(id) {
+      const r = Store.getReturns().find(ret => ret.id === id);
+      if (!r) return;
+
+      document.getElementById('rvm-number').textContent = r.number;
+      document.getElementById('rvm-number-val').textContent = r.number;
+      document.getElementById('rvm-date').textContent = Utils.formatDate(r.date);
+      document.getElementById('rvm-invoice').textContent = r.invoiceRef;
+      document.getElementById('rvm-reason').textContent = r.reason;
+      document.getElementById('rvm-customer').textContent = r.customerName;
+
+      // Additional customer details
+      const cust = Store.getCustomerById(r.customerId);
+      if (cust) {
+        document.getElementById('rvm-cust-mobile').textContent = cust.mobile || '-';
+        document.getElementById('rvm-cust-gstin').textContent = cust.gstin || 'Unregistered';
+        
+        let addrParts = [];
+        if (cust.address) addrParts.push(cust.address);
+        if (cust.taluk) addrParts.push(cust.taluk);
+        if (cust.district) addrParts.push(cust.district);
+        if (cust.state) addrParts.push(cust.state);
+        if (cust.pincode) addrParts.push(cust.pincode);
+        
+        document.getElementById('rvm-cust-address').textContent = addrParts.join(', ') || '-';
+      } else {
+        document.getElementById('rvm-cust-mobile').textContent = '-';
+        document.getElementById('rvm-cust-gstin').textContent = '-';
+        document.getElementById('rvm-cust-address').textContent = 'Customer details unavailable (deleted)';
+      }
+
+      // Calculate subtotal
+      let subtotal = 0;
+      const tbody = document.getElementById('rvm-items-body');
+      tbody.innerHTML = r.items.map((item, idx) => {
+        const lineTotal = item.qty * item.rate;
+        subtotal += lineTotal;
+        return `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><strong>${item.name}</strong></td>
+            <td class="num">${item.qty}</td>
+            <td class="num">${Utils.currency(item.rate)}</td>
+            <td class="num">${Utils.currency(item.amount || lineTotal)}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const gst = r.refundTotal - subtotal;
+
+      document.getElementById('rvm-subtotal').textContent = Utils.currency(subtotal);
+      document.getElementById('rvm-gst').textContent = Utils.currency(gst > 0 ? gst : 0);
+      document.getElementById('rvm-total').textContent = Utils.currency(r.refundTotal);
+
+      document.getElementById('return-view-modal').classList.add('active');
+    }
+
+    function closeReturnModal() {
+      document.getElementById('return-view-modal').classList.remove('active');
+    }
+  </script>
+
+  <!-- ── Return View Modal ── -->
+  <div class="ret-modal-overlay" id="return-view-modal">
+    <div class="ret-modal-box">
+      <div class="ret-modal-header">
+        <h4>
+          <i class="bi bi-arrow-return-left" style="color:var(--danger)"></i>
+          Return Note Details
+          <span class="ret-badge" id="rvm-number"></span>
+        </h4>
+        <div class="ret-modal-actions">
+          <button class="btn btn-outline btn-sm" onclick="closeReturnModal()">
+            <i class="bi bi-x-lg"></i> Close
+          </button>
+        </div>
+      </div>
+      <div class="ret-modal-body">
+
+        <!-- Info + Customer -->
+        <div class="ro-grid-2">
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-info-circle"></i> Return Information</div>
+            <div class="ro-section-body">
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Return Number</label><div class="ro-val" id="rvm-number-val"></div></div>
+                <div class="ro-field"><label>Date</label><div class="ro-val" id="rvm-date"></div></div>
+              </div>
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Invoice Ref</label><div class="ro-val" id="rvm-invoice"></div></div>
+                <div class="ro-field"><label>Return Reason</label><div class="ro-val" id="rvm-reason"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-person"></i> Customer Information</div>
+            <div class="ro-section-body">
+              <div class="ro-full ro-field"><label>Customer Name</label><div class="ro-val" id="rvm-customer"></div></div>
+              <div class="ro-grid-2">
+                <div class="ro-field"><label>Mobile / Phone</label><div class="ro-val" id="rvm-cust-mobile">-</div></div>
+                <div class="ro-field"><label>GSTIN</label><div class="ro-val" id="rvm-cust-gstin">-</div></div>
+              </div>
+              <div class="ro-full ro-field" style="margin-top:12px"><label>Address</label><div class="ro-val" id="rvm-cust-address">-</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Items -->
+        <div class="ro-section">
+          <div class="ro-section-title"><i class="bi bi-table"></i> Returned Items</div>
+          <div style="overflow-x:auto">
+            <table class="ret-items-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Product</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Rate</th>
+                  <th class="num">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="rvm-items-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Summary -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px">
+          <div></div>
+          <div class="ro-section">
+            <div class="ro-section-title"><i class="bi bi-calculator"></i> Refund Summary</div>
+            <div class="ro-section-body" style="padding:10px 14px">
+              <div class="invoice-summary" style="margin-top:0">
+                <div class="summary-row"><span>Return Subtotal</span><span id="rvm-subtotal">₹0.00</span></div>
+                <div class="summary-row"><span>GST</span><span id="rvm-gst">₹0.00</span></div>
+                <div class="summary-row total"><span>Refund Total</span><span id="rvm-total" style="color:var(--danger)">₹0.00</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>
