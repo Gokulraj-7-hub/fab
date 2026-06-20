@@ -1,0 +1,77 @@
+mutation CreateCategory($name: String!, $status: String!) @auth(level: PUBLIC) {
+  category_insert(data: { name: $name, status: $status })
+}
+
+mutation CreateUnit($name: String!, $status: String!) @auth(level: PUBLIC) {
+  unit_insert(data: { name: $name, status: $status })
+}
+
+mutation CreateSize($name: String!, $status: String!) @auth(level: PUBLIC) {
+  size_insert(data: { name: $name, status: $status })
+}
+
+mutation CreateProduct(
+  $name: String!
+  $hsn: String
+  $code: String
+  $categoryId: String
+  $unitId: String
+  $sizeId: String
+  $gst: Float!
+  $rate: Float!
+  $stock: Int!
+  $description: String
+  $status: String!
+) @auth(level: PUBLIC) {
+  product_insert(data: {
+    name: $name
+    hsn: $hsn
+    code: $code
+    categoryId: $categoryId
+    unitId: $unitId
+    sizeId: $sizeId
+    gst: $gst
+    rate: $rate
+    stock: $stock
+    description: $description
+    status: $status
+  })
+}
+
+mutation CreateCustomer(
+  $name: String!
+  $gstin: String
+  $mobile: String!
+  $email: String
+  $address: String!
+  $status: String!
+) @auth(level: PUBLIC) {
+  customer_insert(data: {
+    name: $name
+    gstin: $gstin
+    mobile: $mobile
+    email: $email
+    address: $address
+    status: $status
+  })
+}
+
+mutation CreateSupplier(
+  $name: String!
+  $contactPerson: String
+  $gstin: String
+  $mobile: String!
+  $email: String
+  $address: String!
+  $status: String!
+) @auth(level: PUBLIC) {
+  supplier_insert(data: {
+    name: $name
+    contactPerson: $contactPerson
+    gstin: $gstin
+    mobile: $mobile
+    email: $email
+    address: $address
+    status: $status
+  })
+}
