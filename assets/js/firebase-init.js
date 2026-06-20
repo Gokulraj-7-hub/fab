@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDataConnect } from "firebase/data-connect";
-import { connectorConfig } from "./dataconnect/esm/index.esm.js";
+import { connectorConfig, listProducts } from "./dataconnect/esm/index.esm.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -25,4 +25,5 @@ const dataConnect = getDataConnect(app, connectorConfig);
 // Expose globally so vanilla JS can use it
 window.firebaseApp = app;
 window.dataConnect = dataConnect;
+window.listProducts = listProducts;
 console.log("Firebase and Data Connect initialized successfully!");
