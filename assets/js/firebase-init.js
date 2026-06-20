@@ -43,7 +43,7 @@ window.runMigration = async () => {
   try {
     // 1. Migrate Categories
     const categoryMap = {};
-    for (const catName of Store.categories) {
+    for (const catName of window.Store.categories) {
       const res = await createCategory({ name: catName, status: "active" });
       categoryMap[catName] = res.data.category_insert; // get the new ID
     }
@@ -51,7 +51,7 @@ window.runMigration = async () => {
 
     // 2. Migrate Units
     const unitMap = {};
-    for (const unitName of Store.units) {
+    for (const unitName of window.Store.units) {
       const res = await createUnit({ name: unitName, status: "active" });
       unitMap[unitName] = res.data.unit_insert;
     }
@@ -59,14 +59,14 @@ window.runMigration = async () => {
 
     // 3. Migrate Sizes
     const sizeMap = {};
-    for (const sizeName of Store.sizes) {
+    for (const sizeName of window.Store.sizes) {
       const res = await createSize({ name: sizeName, status: "active" });
       sizeMap[sizeName] = res.data.size_insert;
     }
     console.log("Sizes migrated.");
 
     // 4. Migrate Products
-    for (const p of Store.products) {
+    for (const p of window.Store.products) {
       await createProduct({
         name: p.name,
         hsn: p.hsn || "",
@@ -84,7 +84,7 @@ window.runMigration = async () => {
     console.log("Products migrated.");
 
     // 5. Migrate Customers
-    for (const c of Store.customers) {
+    for (const c of window.Store.customers) {
       await createCustomer({
         name: c.name,
         gstin: c.gstin || "",
@@ -97,7 +97,7 @@ window.runMigration = async () => {
     console.log("Customers migrated.");
 
     // 6. Migrate Suppliers
-    for (const s of Store.suppliers) {
+    for (const s of window.Store.suppliers) {
       await createSupplier({
         name: s.name,
         contactPerson: s.contactPerson || "",
