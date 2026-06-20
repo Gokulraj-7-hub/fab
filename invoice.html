@@ -48,6 +48,18 @@
     .inv-clickable-row { cursor:pointer; transition:background .15s; }
     .inv-clickable-row:hover { background-color:var(--primary-bg) !important; }
   </style>
+
+  <!-- Firebase Setup -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js",
+        "firebase/data-connect": "https://www.gstatic.com/firebasejs/10.12.2/firebase-data-connect.js"
+      }
+    }
+  </script>
+  <script type="module" src="assets/js/firebase-init.js"></script>
 </head>
 <body>
   <div class="app-wrapper">

@@ -6,6 +6,18 @@
   <title>BillFlow - Billing & Inventory Management</title>
   <meta name="description" content="Professional GST-enabled billing and inventory management system">
   <script>location.href = 'login.html';</script>
+
+  <!-- Firebase Setup -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js",
+        "firebase/data-connect": "https://www.gstatic.com/firebasejs/10.12.2/firebase-data-connect.js"
+      }
+    }
+  </script>
+  <script type="module" src="assets/js/firebase-init.js"></script>
 </head>
 <body>
   <p>Redirecting to <a href="login.html">Login</a>...</p>
