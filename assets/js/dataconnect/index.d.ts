@@ -180,6 +180,30 @@ export interface User_Key {
   __typename?: 'User_Key';
 }
 
+interface ListProductsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<ListProductsData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<ListProductsData, undefined>;
+  operationName: string;
+}
+export const listProductsRef: ListProductsRef;
+
+export function listProducts(): QueryPromise<ListProductsData, undefined>;
+export function listProducts(dc: DataConnect): QueryPromise<ListProductsData, undefined>;
+
+interface GetDashboardStatsRef {
+  /* Allow users to create refs without passing in DataConnect */
+  (): QueryRef<GetDashboardStatsData, undefined>;
+  /* Allow users to pass in custom DataConnect instances */
+  (dc: DataConnect): QueryRef<GetDashboardStatsData, undefined>;
+  operationName: string;
+}
+export const getDashboardStatsRef: GetDashboardStatsRef;
+
+export function getDashboardStats(): QueryPromise<GetDashboardStatsData, undefined>;
+export function getDashboardStats(dc: DataConnect): QueryPromise<GetDashboardStatsData, undefined>;
+
 interface CreateCategoryRef {
   /* Allow users to create refs without passing in DataConnect */
   (vars: CreateCategoryVariables): MutationRef<CreateCategoryData, CreateCategoryVariables>;
@@ -251,28 +275,4 @@ export const createSupplierRef: CreateSupplierRef;
 
 export function createSupplier(vars: CreateSupplierVariables): MutationPromise<CreateSupplierData, CreateSupplierVariables>;
 export function createSupplier(dc: DataConnect, vars: CreateSupplierVariables): MutationPromise<CreateSupplierData, CreateSupplierVariables>;
-
-interface ListProductsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<ListProductsData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<ListProductsData, undefined>;
-  operationName: string;
-}
-export const listProductsRef: ListProductsRef;
-
-export function listProducts(): QueryPromise<ListProductsData, undefined>;
-export function listProducts(dc: DataConnect): QueryPromise<ListProductsData, undefined>;
-
-interface GetDashboardStatsRef {
-  /* Allow users to create refs without passing in DataConnect */
-  (): QueryRef<GetDashboardStatsData, undefined>;
-  /* Allow users to pass in custom DataConnect instances */
-  (dc: DataConnect): QueryRef<GetDashboardStatsData, undefined>;
-  operationName: string;
-}
-export const getDashboardStatsRef: GetDashboardStatsRef;
-
-export function getDashboardStats(): QueryPromise<GetDashboardStatsData, undefined>;
-export function getDashboardStats(dc: DataConnect): QueryPromise<GetDashboardStatsData, undefined>;
 

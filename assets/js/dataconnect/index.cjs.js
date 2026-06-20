@@ -7,6 +7,30 @@ const connectorConfig = {
 };
 exports.connectorConfig = connectorConfig;
 
+const listProductsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListProducts');
+}
+listProductsRef.operationName = 'ListProducts';
+exports.listProductsRef = listProductsRef;
+
+exports.listProducts = function listProducts(dc) {
+  return executeQuery(listProductsRef(dc));
+};
+
+const getDashboardStatsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetDashboardStats');
+}
+getDashboardStatsRef.operationName = 'GetDashboardStats';
+exports.getDashboardStatsRef = getDashboardStatsRef;
+
+exports.getDashboardStats = function getDashboardStats(dc) {
+  return executeQuery(getDashboardStatsRef(dc));
+};
+
 const createCategoryRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -77,28 +101,4 @@ exports.createSupplierRef = createSupplierRef;
 
 exports.createSupplier = function createSupplier(dcOrVars, vars) {
   return executeMutation(createSupplierRef(dcOrVars, vars));
-};
-
-const listProductsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListProducts');
-}
-listProductsRef.operationName = 'ListProducts';
-exports.listProductsRef = listProductsRef;
-
-exports.listProducts = function listProducts(dc) {
-  return executeQuery(listProductsRef(dc));
-};
-
-const getDashboardStatsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetDashboardStats');
-}
-getDashboardStatsRef.operationName = 'GetDashboardStats';
-exports.getDashboardStatsRef = getDashboardStatsRef;
-
-exports.getDashboardStats = function getDashboardStats(dc) {
-  return executeQuery(getDashboardStatsRef(dc));
 };

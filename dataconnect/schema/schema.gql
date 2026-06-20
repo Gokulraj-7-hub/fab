@@ -1,5 +1,5 @@
 # Users and Permissions
-type User @table(name: "tbl_users") {
+type User @table(name: "fab_users") {
   id: String! @col(name: "usr_id") @default(expr: "uuidV4()")
   username: String! @unique
   passwordHash: String! @col(name: "usr_password")
@@ -14,7 +14,7 @@ type User @table(name: "tbl_users") {
   deletedBy: User @ref
 }
 
-type UserPermission @table(name: "tbl_user_permissions") {
+type UserPermission @table(name: "fab_user_permissions") {
   id: String! @col(name: "perm_id") @default(expr: "uuidV4()")
   user: User! @ref
   moduleName: String! @col(name: "perm_module_name")
@@ -22,7 +22,7 @@ type UserPermission @table(name: "tbl_user_permissions") {
 }
 
 # Lookup tables
-type Category @table(name: "tbl_categories") {
+type Category @table(name: "fab_categories") {
   id: String! @col(name: "cat_id") @default(expr: "uuidV4()")
   name: String! @unique
   status: String! @col(name: "cat_status")
@@ -34,7 +34,7 @@ type Category @table(name: "tbl_categories") {
   deletedBy: User @ref
 }
 
-type Unit @table(name: "tbl_units") {
+type Unit @table(name: "fab_units") {
   id: String! @col(name: "unit_id") @default(expr: "uuidV4()")
   name: String! @unique
   status: String! @col(name: "unit_status")
@@ -46,7 +46,7 @@ type Unit @table(name: "tbl_units") {
   deletedBy: User @ref
 }
 
-type Size @table(name: "tbl_sizes") {
+type Size @table(name: "fab_sizes") {
   id: String! @col(name: "size_id") @default(expr: "uuidV4()")
   name: String! @unique
   status: String! @col(name: "size_status")
@@ -58,7 +58,7 @@ type Size @table(name: "tbl_sizes") {
   deletedBy: User @ref
 }
 
-type State @table(name: "tbl_states") {
+type State @table(name: "fab_states") {
   id: String! @col(name: "state_id") @default(expr: "uuidV4()")
   name: String! @unique
   status: String! @col(name: "state_status")
@@ -70,7 +70,7 @@ type State @table(name: "tbl_states") {
   deletedBy: User @ref
 }
 
-type District @table(name: "tbl_districts") {
+type District @table(name: "fab_districts") {
   id: String! @col(name: "dist_id") @default(expr: "uuidV4()")
   name: String! @col(name: "dist_name")
   state: State! @ref
@@ -84,7 +84,7 @@ type District @table(name: "tbl_districts") {
 }
 
 # Settings
-type CompanySetting @table(name: "tbl_company_settings") {
+type CompanySetting @table(name: "fab_company_settings") {
   id: String! @col(name: "comp_id") @default(expr: "uuidV4()")
   name: String! @col(name: "comp_name")
   gstin: String @col(name: "comp_gstin")
@@ -121,7 +121,7 @@ type CompanySetting @table(name: "tbl_company_settings") {
 }
 
 # Products
-type Product @table(name: "tbl_products") {
+type Product @table(name: "fab_products") {
   id: String! @col(name: "prod_id") @default(expr: "uuidV4()")
   name: String! @col(name: "prod_name")
   hsn: String @col(name: "prod_hsn")
@@ -142,7 +142,7 @@ type Product @table(name: "tbl_products") {
   deletedBy: User @ref
 }
 
-type ProductPriceHistory @table(name: "tbl_product_price_history") {
+type ProductPriceHistory @table(name: "fab_product_price_history") {
   id: String! @col(name: "hist_id") @default(expr: "uuidV4()")
   product: Product! @ref
   oldPrice: Float @col(name: "hist_old_price")
@@ -154,7 +154,7 @@ type ProductPriceHistory @table(name: "tbl_product_price_history") {
 }
 
 # Customers & Suppliers
-type Customer @table(name: "tbl_customers") {
+type Customer @table(name: "fab_customers") {
   id: String! @col(name: "cust_id") @default(expr: "uuidV4()")
   name: String! @col(name: "cust_name")
   gstin: String @col(name: "cust_gstin")
@@ -175,7 +175,7 @@ type Customer @table(name: "tbl_customers") {
   deletedBy: User @ref
 }
 
-type Supplier @table(name: "tbl_suppliers") {
+type Supplier @table(name: "fab_suppliers") {
   id: String! @col(name: "sup_id") @default(expr: "uuidV4()")
   name: String! @col(name: "sup_name")
   contactPerson: String @col(name: "sup_contact_person")
@@ -198,7 +198,7 @@ type Supplier @table(name: "tbl_suppliers") {
 }
 
 # Invoices
-type Invoice @table(name: "tbl_invoices") {
+type Invoice @table(name: "fab_invoices") {
   id: String! @col(name: "inv_id") @default(expr: "uuidV4()")
   number: String! @unique
   date: Date! @col(name: "inv_date")
@@ -216,7 +216,7 @@ type Invoice @table(name: "tbl_invoices") {
   isLocked: Boolean! @col(name: "inv_is_locked")
 }
 
-type InvoiceItem @table(name: "tbl_invoice_items") {
+type InvoiceItem @table(name: "fab_invoice_items") {
   id: String! @col(name: "inv_item_id") @default(expr: "uuidV4()")
   invoice: Invoice! @ref
   product: Product @ref
@@ -231,7 +231,7 @@ type InvoiceItem @table(name: "tbl_invoice_items") {
 }
 
 # Returns
-type Return @table(name: "tbl_returns") {
+type Return @table(name: "fab_returns") {
   id: String! @col(name: "ret_id") @default(expr: "uuidV4()")
   number: String! @unique
   date: Date! @col(name: "ret_date")
@@ -242,7 +242,7 @@ type Return @table(name: "tbl_returns") {
   refundTotal: Float! @col(name: "ret_refund_total")
 }
 
-type ReturnItem @table(name: "tbl_return_items") {
+type ReturnItem @table(name: "fab_return_items") {
   id: String! @col(name: "ret_item_id") @default(expr: "uuidV4()")
   return: Return! @ref
   product: Product @ref

@@ -6,6 +6,28 @@ export const connectorConfig = {
   location: 'us-east4'
 };
 
+export const listProductsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'ListProducts');
+}
+listProductsRef.operationName = 'ListProducts';
+
+export function listProducts(dc) {
+  return executeQuery(listProductsRef(dc));
+}
+
+export const getDashboardStatsRef = (dc) => {
+  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
+  dcInstance._useGeneratedSdk();
+  return queryRef(dcInstance, 'GetDashboardStats');
+}
+getDashboardStatsRef.operationName = 'GetDashboardStats';
+
+export function getDashboardStats(dc) {
+  return executeQuery(getDashboardStatsRef(dc));
+}
+
 export const createCategoryRef = (dcOrVars, vars) => {
   const { dc: dcInstance, vars: inputVars} = validateArgs(connectorConfig, dcOrVars, vars, true);
   dcInstance._useGeneratedSdk();
@@ -70,27 +92,5 @@ createSupplierRef.operationName = 'CreateSupplier';
 
 export function createSupplier(dcOrVars, vars) {
   return executeMutation(createSupplierRef(dcOrVars, vars));
-}
-
-export const listProductsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'ListProducts');
-}
-listProductsRef.operationName = 'ListProducts';
-
-export function listProducts(dc) {
-  return executeQuery(listProductsRef(dc));
-}
-
-export const getDashboardStatsRef = (dc) => {
-  const { dc: dcInstance} = validateArgs(connectorConfig, dc, undefined);
-  dcInstance._useGeneratedSdk();
-  return queryRef(dcInstance, 'GetDashboardStats');
-}
-getDashboardStatsRef.operationName = 'GetDashboardStats';
-
-export function getDashboardStats(dc) {
-  return executeQuery(getDashboardStatsRef(dc));
 }
 

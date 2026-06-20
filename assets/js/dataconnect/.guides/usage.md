@@ -14,8 +14,14 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { createCategory, createUnit, createSize, createProduct, createCustomer, createSupplier, listProducts, getDashboardStats } from 'billflow-dataconnect';
+import { listProducts, getDashboardStats, createCategory, createUnit, createSize, createProduct, createCustomer, createSupplier } from 'billflow-dataconnect';
 
+
+// Operation ListProducts: 
+const { data } = await ListProducts(dataConnect);
+
+// Operation GetDashboardStats: 
+const { data } = await GetDashboardStats(dataConnect);
 
 // Operation CreateCategory:  For variables, look at type CreateCategoryVars in ../index.d.ts
 const { data } = await CreateCategory(dataConnect, createCategoryVars);
@@ -34,12 +40,6 @@ const { data } = await CreateCustomer(dataConnect, createCustomerVars);
 
 // Operation CreateSupplier:  For variables, look at type CreateSupplierVars in ../index.d.ts
 const { data } = await CreateSupplier(dataConnect, createSupplierVars);
-
-// Operation ListProducts: 
-const { data } = await ListProducts(dataConnect);
-
-// Operation GetDashboardStats: 
-const { data } = await GetDashboardStats(dataConnect);
 
 
 ```
