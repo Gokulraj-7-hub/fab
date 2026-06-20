@@ -1,0 +1,19 @@
+# Sample queries to get you started
+
+query ListProducts @auth(level: PUBLIC) {
+  products {
+    id
+    name
+    rate
+    stock
+    status
+  }
+}
+
+query GetDashboardStats @auth(level: PUBLIC) {
+  products(where: { stock: { le: 10 }, status: { eq: "active" } }) {
+    id
+    name
+    stock
+  }
+}
