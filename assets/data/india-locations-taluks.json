@@ -1,0 +1,2712 @@
+{
+  "states": [
+    {
+      "state": "ANDHRA PRADESH",
+      "districts": [
+        {
+          "district": "Alluri Sitharama Raju",
+          "taluks": [
+            "Ananthagiri",
+            "Araku Valley",
+            "Chinthapalli",
+            "Dumbriguda",
+            "G.Madugula",
+            "Gudem Kotha Veedhi",
+            "Hukumpeta",
+            "Koyyuru",
+            "Munchingi Puttu",
+            "Paderu",
+            "Peda Bayalu"
+          ]
+        },
+        {
+          "district": "Anakapalli",
+          "taluks": [
+            "Anakapalli",
+            "Atchuthapuram",
+            "Butchayyapeta",
+            "Cheedikada",
+            "Chodavaram",
+            "Devarapalli",
+            "Golugonda",
+            "K.Kotapadu",
+            "Kasimkota",
+            "Kotauratla",
+            "Madugula",
+            "Makavarapalem",
+            "Munagapaka",
+            "Nakkapalli",
+            "Narsipatnam",
+            "Nathavaram",
+            "Paravada",
+            "Payakaraopeta",
+            "Rambilli",
+            "Ravikamatham",
+            "Rolugunta",
+            "S.Rayavaram",
+            "Sabbavaram",
+            "Yelamanchili"
+          ]
+        },
+        {
+          "district": "Ananthapuramu",
+          "taluks": [
+            "Anantapur Rural",
+            "Anantapur Urban",
+            "Atmakur",
+            "Beluguppa",
+            "Bommanahal",
+            "Brahmasamudram",
+            "Bukkaraya Samudram",
+            "D.Hirehal",
+            "Garladinne",
+            "Gooty",
+            "Gummagatta",
+            "Guntakal",
+            "Kalyanadurg",
+            "Kambadur",
+            "Kanekal",
+            "Kudair",
+            "Kundurpi",
+            "Narpala",
+            "Pamidi",
+            "Peddapappur",
+            "Peddavaduguru",
+            "Putlur",
+            "Rapthadu",
+            "Rayadurg",
+            "Settur",
+            "Singanamala",
+            "Tadipatri",
+            "Uravakonda",
+            "Vajrakarur",
+            "Vidapanakal",
+            "Yadiki",
+            "Yellanur"
+          ]
+        },
+        {
+          "district": "Annamayya",
+          "taluks": [
+            "Beerongi Kothakota",
+            "Chinnamandem",
+            "Chowdepalle",
+            "Galiveedu",
+            "Gurramkonda",
+            "Kalakada",
+            "Kalikiri",
+            "Kambhamvaripalle",
+            "Kurabalakota",
+            "Lakkireddipalli",
+            "Madanapalle",
+            "Mulakalacheruvu",
+            "Nimmanapalle",
+            "Pedda Thippasamudram",
+            "Peddamandyam",
+            "Pileru",
+            "Punganuru",
+            "Ramapuram",
+            "Ramasamudram",
+            "Rayachoti",
+            "Sambepalle",
+            "Sodam",
+            "Somala",
+            "Thamballapalle",
+            "Valmikipuram"
+          ]
+        },
+        {
+          "district": "Bapatla",
+          "taluks": [
+            "Amarthalur",
+            "Bapatla",
+            "Bhattiprolu",
+            "Cherukupalli",
+            "Chinaganjam",
+            "Chirala",
+            "Inkollu",
+            "Karamchedu",
+            "Karlapalem",
+            "Kolluru",
+            "Martur",
+            "Nagaram",
+            "Nizampatnam",
+            "Parchur",
+            "Pittalavanipalem",
+            "Repalle",
+            "Tsunduru",
+            "Vemuru",
+            "Vetapalem",
+            "Yeddana Pudi"
+          ]
+        },
+        {
+          "district": "Chittoor",
+          "taluks": [
+            "Baireddipalle",
+            "Bangarupalem",
+            "Chittoor Rural",
+            "Chittoor Urban",
+            "Gangadhara Nellore",
+            "Gangavaram",
+            "Gudipala",
+            "Gudupalle",
+            "Irala",
+            "Karvetinagar",
+            "Kuppam",
+            "Nagari",
+            "Nindra",
+            "Palamaner",
+            "Palasamudram",
+            "Peddapanjani",
+            "Penumur",
+            "Pulicherla",
+            "Puthalapattu",
+            "Ramakuppam",
+            "Rompicherla",
+            "Santhipuram",
+            "Srirangarajapuram",
+            "Thavanampalle",
+            "Vedurukuppam",
+            "Venkatagirikota",
+            "Vijayapuram",
+            "Yadamarri"
+          ]
+        },
+        {
+          "district": "Dr. B.R. Ambedkar Konaseema",
+          "taluks": [
+            "Ainavilli",
+            "Alamuru",
+            "Allavaram",
+            "Amalapuram",
+            "Ambajipeta",
+            "Atreyapuram",
+            "I. Polavaram",
+            "K Gangavaram",
+            "Katrenikona",
+            "Kothapeta",
+            "Malikipuram",
+            "Mamidikuduru",
+            "Mummidivaram",
+            "P.Gannavaram",
+            "Ramachandrapuram",
+            "Ravulapalem",
+            "Razole",
+            "Sakhinetipalli",
+            "Uppalaguptam"
+          ]
+        },
+        {
+          "district": "East Godavari",
+          "taluks": [
+            "Anaparthi",
+            "Biccavolu",
+            "Chagallu",
+            "Devarapalle",
+            "Gokavaram",
+            "Gopalapuram",
+            "Kadiam",
+            "Kapileswarapuram",
+            "Korukonda",
+            "Kovvur",
+            "Mandapeta",
+            "Nallajerla",
+            "Nidadavole",
+            "Peravali",
+            "Rajamahendravaram Rural",
+            "Rajamahendravaram Urban",
+            "Rajanagaram",
+            "Rangampeta",
+            "Rayavaram",
+            "Seethanagaram",
+            "Tallapudi",
+            "Undrajavaram"
+          ]
+        },
+        {
+          "district": "Eluru",
+          "taluks": [
+            "Agiripalli",
+            "Bheemadole",
+            "Buttayagudem",
+            "Chatrai",
+            "Chintalapudi",
+            "Denduluru",
+            "Dwarakatirumala",
+            "Eluru Rural",
+            "Eluru Urban",
+            "Jangareddigudem",
+            "Jeelugu Milli",
+            "Kaikaluru",
+            "Kalidindi",
+            "Kamavarapukota",
+            "Koyyalagudem",
+            "Kukunoor",
+            "Lingapalem",
+            "Mandavalli",
+            "Mudinepalle",
+            "Musunuru",
+            "Nidamarru",
+            "Nuzividu",
+            "Pedapadu",
+            "Pedavegi",
+            "Polavaram",
+            "T.Narasapuram",
+            "Unguturu",
+            "Velairpadu"
+          ]
+        },
+        {
+          "district": "Guntur",
+          "taluks": [
+            "Chebrolu",
+            "Duggirala",
+            "Guntur East",
+            "Guntur West",
+            "Kakumanu",
+            "Kollipara",
+            "Mangalagiri",
+            "Medikonduru",
+            "Pedakakani",
+            "Pedanandipadu",
+            "Phirangipuram",
+            "Ponnur",
+            "Prathipadu",
+            "Tadepalli",
+            "Tadikonda",
+            "Tenali",
+            "Thulluru",
+            "Vatticherukuru"
+          ]
+        },
+        {
+          "district": "Kakinada",
+          "taluks": [
+            "Gandepalli",
+            "Gollaprolu",
+            "Jaggampeta",
+            "Kajuluru",
+            "Kakinada (Rural)",
+            "Kakinada (Urban)",
+            "Karapa",
+            "Kirlampudi",
+            "Kotananduru",
+            "Pedapudi",
+            "Peddapuram",
+            "Pithapuram",
+            "Prathipadu",
+            "Rowthulapudi",
+            "Samalkota",
+            "Sankhavaram",
+            "Tallarevu",
+            "Thondangi",
+            "Tuni",
+            "U.Kothapalli",
+            "Yeleswaram"
+          ]
+        },
+        {
+          "district": "Krishna",
+          "taluks": [
+            "Avanigadda",
+            "Bantumilli",
+            "Bapulapadu",
+            "Challapalli",
+            "Gannavaram",
+            "Ghantasala",
+            "Gudivada",
+            "Gudlavalleru",
+            "Guduru",
+            "Kankipadu",
+            "Koduru",
+            "Kruthivennu",
+            "Machilipatnam North",
+            "Machilipatnam South",
+            "Mopidevi",
+            "Movva",
+            "Nagayalanka",
+            "Nandivada",
+            "Pamarru",
+            "Pamidimukkala",
+            "Pedana",
+            "Pedaparupudi",
+            "Penamaluru",
+            "Thotlavalluru",
+            "Unguturu",
+            "Vuyyuru"
+          ]
+        },
+        {
+          "district": "Kurnool",
+          "taluks": [
+            "Adoni",
+            "Adoni-2",
+            "Alur",
+            "Aspari",
+            "C.Belagal",
+            "Chippagiri",
+            "Devanakonda",
+            "Gonegandla",
+            "Gudur",
+            "Halaharvi",
+            "Holagunda",
+            "Kallur",
+            "Kodumur",
+            "Kosigi",
+            "Kowthalam",
+            "Krishnagiri",
+            "Kurnool Rural",
+            "Kurnool Urban",
+            "Maddikera (East)",
+            "Mantralayam",
+            "Nandavaram",
+            "Orvakal",
+            "Pattikonda",
+            "Pedda Kadubur",
+            "Tuggali",
+            "Veldurthy",
+            "Yemmiganur"
+          ]
+        },
+        {
+          "district": "Markapuram",
+          "taluks": [
+            "Ardhaveedu",
+            "Bestavaripeta",
+            "Chandra Sekhara Puram",
+            "Cumbum",
+            "Dornala",
+            "Giddalur",
+            "Hanumanthuni Padu",
+            "Kanigiri",
+            "Komarolu",
+            "Konakanamitla",
+            "Markapuram",
+            "Pamur",
+            "Pedacherlo Palle",
+            "Peddaaraveedu",
+            "Podili",
+            "Pullalacheruvu",
+            "Racherla",
+            "Tarlupadu",
+            "Tripuranthakam",
+            "Veligandla",
+            "Yerragondapalem"
+          ]
+        },
+        {
+          "district": "Nandyal",
+          "taluks": [
+            "Allagadda",
+            "Atmakur",
+            "Banaganapalli",
+            "Bandi Atmakur",
+            "Bethamcherla",
+            "Chagalamarri",
+            "Dhone",
+            "Dornipadu",
+            "Gadivemula",
+            "Gospadu",
+            "Jupadu Bunglow",
+            "Koilakuntla",
+            "Kolimigundla",
+            "Kothapalle",
+            "Mahanandi",
+            "Midthur",
+            "Nandikotkur",
+            "Nandyal Rural",
+            "Nandyal Urban",
+            "Owk",
+            "Pagidyala",
+            "Pamulapadu",
+            "Panyam",
+            "Peapully",
+            "Rudravaram",
+            "Sanjamala",
+            "Sirvel",
+            "Srisailam",
+            "Uyyalawada",
+            "Velugodu"
+          ]
+        },
+        {
+          "district": "Ntr",
+          "taluks": [
+            "Atlapragada Konduru",
+            "Chandarlapadu",
+            "Gaddamanugu Konduru",
+            "Gampalagudem",
+            "Ibrahimpatnam",
+            "Jaggaiahpeta",
+            "Kanchikacherla",
+            "Mylavaram",
+            "Nandigama",
+            "Penuganchiprolu",
+            "Reddigudem",
+            "Tiruvuru",
+            "Vatsavai",
+            "Veerullapadu",
+            "Vijayawada (Rural)",
+            "Vijayawada Central",
+            "Vijayawada East",
+            "Vijayawada North",
+            "Vijayawada West",
+            "Vissannapeta"
+          ]
+        },
+        {
+          "district": "Palnadu",
+          "taluks": [
+            "Amaravathi",
+            "Atchampet",
+            "Bellamkonda",
+            "Bollapalli",
+            "Chilakaluripet H/O.Purushotha Patnam",
+            "Dachepalli",
+            "Durgi",
+            "Edlapadu",
+            "Gurajala",
+            "Ipuru",
+            "Karempudi",
+            "Krosuru",
+            "Machavaram",
+            "Macherla",
+            "Muppalla",
+            "Nadendla",
+            "Narasaraopet",
+            "Nekarikallu",
+            "Nuzendla",
+            "Pedakurapadu",
+            "Piduguralla",
+            "Rajupalem",
+            "Rentachintala",
+            "Rompicharla",
+            "Sattenapalli",
+            "Savalyapuram H/O Kanamarlapudi",
+            "Veldurthy",
+            "Vinukonda"
+          ]
+        },
+        {
+          "district": "Parvathipuram Manyam",
+          "taluks": [
+            "Balijipeta",
+            "Bhamini",
+            "Garugubilli",
+            "Gummalakshmipuram",
+            "Jiyyammavalasa",
+            "Komarada",
+            "Kurupam",
+            "Makkuva",
+            "Pachipenta",
+            "Palakonda",
+            "Parvathipuram",
+            "Salur",
+            "Seethampeta",
+            "Seethanagaram",
+            "Veeraghattam"
+          ]
+        },
+        {
+          "district": "Polavaram",
+          "taluks": [
+            "Addateegala",
+            "Chinturu",
+            "Devipatnam",
+            "Gangavaram",
+            "Gurthedu",
+            "Kunavaram",
+            "Maredumilli",
+            "Rajavommangi",
+            "Rampachodavaram",
+            "Vararamachandrapuram",
+            "Y. Ramavaram",
+            "Yetapaka"
+          ]
+        },
+        {
+          "district": "Prakasam",
+          "taluks": [
+            "Addanki",
+            "Ballikurava",
+            "Chimakurthy",
+            "Darsi",
+            "Donakonda",
+            "Gudluru",
+            "J.Pangulur",
+            "Kandukuru",
+            "Kondapi",
+            "Korisapadu",
+            "Kotha Patnam",
+            "Kurichedu",
+            "Lingasamudram",
+            "Maddipadu",
+            "Marripudi",
+            "Mundlamuru",
+            "Naguluppala Padu",
+            "Ongole Rural",
+            "Ongole Urban",
+            "Ponnaluru",
+            "Santhamaguluru",
+            "Santhanuthala Padu",
+            "Singarayakonda",
+            "Tangutur",
+            "Thallur",
+            "Ulavapadu",
+            "Voletivaripalem",
+            "Zarugumalli"
+          ]
+        },
+        {
+          "district": "Sri Potti Sriramulu Nellore",
+          "taluks": [
+            "Allur",
+            "Ananthasagaram",
+            "Anumasamudrampeta",
+            "Atmakur",
+            "Bogole",
+            "Buchireddipalem",
+            "Chejerla",
+            "Chillakur",
+            "Dagadarthi",
+            "Duttalur",
+            "Gudur",
+            "Indukurpet",
+            "Jaladanki",
+            "Kaligiri",
+            "Kaluvoya",
+            "Kavali",
+            "Kodavalur",
+            "Kondapuram",
+            "Kota",
+            "Kovur",
+            "Manubolu",
+            "Marripadu",
+            "Muthukur",
+            "Nellore Rural",
+            "Nellore Urban",
+            "Podalakur",
+            "Rapur",
+            "Sangam",
+            "Seetharamapuram",
+            "Sydapuram",
+            "Thotapalligudur",
+            "Udayagiri",
+            "Varikuntapadu",
+            "Venkatachalam",
+            "Vidavalur",
+            "Vinjamur"
+          ]
+        },
+        {
+          "district": "Sri Sathya Sai",
+          "taluks": [
+            "Agali",
+            "Amadagur",
+            "Amarapuram",
+            "Bathalapalli",
+            "Bukkapatnam",
+            "Chennekothapalli",
+            "Chilamathur",
+            "Dharmavaram",
+            "Gandlapenta",
+            "Gorantla",
+            "Gudibanda",
+            "Hindupur",
+            "Kadiri",
+            "Kanaganipalli",
+            "Kothacheruvu",
+            "Lepakshi",
+            "Madakasira",
+            "Mudigubba",
+            "Nallachervu",
+            "Nallamada",
+            "Nambulapulakunta",
+            "Obuladevaracheruvu",
+            "Parigi",
+            "Penukonda",
+            "Puttaparthy",
+            "Ramagiri",
+            "Roddam",
+            "Rolla",
+            "Somandepalli",
+            "Tadimarri",
+            "Talupula",
+            "Tanakal"
+          ]
+        },
+        {
+          "district": "Srikakulam",
+          "taluks": [
+            "Amadalavalasa",
+            "Burja",
+            "Etcherla",
+            "Ganguvarisigadam",
+            "Gara",
+            "Hiramandalam",
+            "Ichchapuram",
+            "Jalumuru",
+            "Kanchili",
+            "Kaviti",
+            "Kotabommali",
+            "Kothuru",
+            "Laveru",
+            "Laxminarasupeta",
+            "Mandasa",
+            "Meliaputti",
+            "Nandigam",
+            "Narasannapeta",
+            "Palasa",
+            "Pathapatnam",
+            "Polaki",
+            "Ponduru",
+            "Ranastalam",
+            "Santhabommali",
+            "Saravakota",
+            "Sarubujjili",
+            "Sompeta",
+            "Srikakulam",
+            "Tekkali",
+            "Vajrapukotturu"
+          ]
+        },
+        {
+          "district": "Tirupati",
+          "taluks": [
+            "Balayapalli",
+            "Buchinaidu Kandriga",
+            "Chandragiri",
+            "Chinnagottigallu",
+            "Chittamur",
+            "Chitvel",
+            "Dakkili",
+            "Doravarisatram",
+            "Kodur",
+            "Kumara Venkata Bhupala Puram",
+            "Nagalapuram",
+            "Naidupet",
+            "Narayanavanam",
+            "Obulavaripalle",
+            "Ozili",
+            "Pakala",
+            "Pellakur",
+            "Penagalur",
+            "Pichatur",
+            "Pullampeta",
+            "Puttur",
+            "Ramachandrapuram",
+            "Renigunta",
+            "Satyavedu",
+            "Srikalahasti",
+            "Sullurpeta",
+            "Tada",
+            "Thottambedu",
+            "Tirupati (Rural)",
+            "Tirupati (Urban)",
+            "Vadamalapet",
+            "Vakadu",
+            "Varadaiahpalem",
+            "Venkatagiri",
+            "Yerpedu",
+            "Yerravaripalem"
+          ]
+        },
+        {
+          "district": "Visakhapatnam",
+          "taluks": [
+            "Anandapuram",
+            "Bheemunipatnam",
+            "Gajuwaka",
+            "Gopalapatnam",
+            "Maharanipeta",
+            "Mulagada",
+            "Padmanabham",
+            "Pedagantyada",
+            "Pendurthi",
+            "Seethammadhara",
+            "Visakhapatnam (Rural)"
+          ]
+        },
+        {
+          "district": "Vizianagaram",
+          "taluks": [
+            "Badangi",
+            "Bhogapuram",
+            "Bobbili",
+            "Bondapalli",
+            "Cheepurupalli",
+            "Dattirajeru",
+            "Denkada",
+            "Gajapathinagaram",
+            "Gantyada",
+            "Garividi",
+            "Gurla",
+            "Jami",
+            "Kothavalasa",
+            "Lakkavarapukota",
+            "Mentada",
+            "Merakamudidam",
+            "Nellimarla",
+            "Poosapatirega",
+            "Rajam",
+            "Ramabhadrapuram",
+            "Regidi Amadalavalasa",
+            "Santhakaviti",
+            "Srungavarapukota",
+            "Therlam",
+            "Vangara",
+            "Vepada",
+            "Vizianagaram Rural",
+            "Vizianagaram Urban"
+          ]
+        },
+        {
+          "district": "West Godavari",
+          "taluks": [
+            "Achanta",
+            "Akividu",
+            "Attili",
+            "Bhimavaram",
+            "Ganapavaram",
+            "Iragavaram",
+            "Kalla",
+            "Mogalthur",
+            "Narasapuram",
+            "Palacoderu",
+            "Palacole",
+            "Pentapadu",
+            "Penugonda",
+            "Penumantra",
+            "Poduru",
+            "Tadepalligudem",
+            "Tanuku",
+            "Undi",
+            "Veeravasaram",
+            "Yelamanchili"
+          ]
+        },
+        {
+          "district": "Y.S.R. Kadapa",
+          "taluks": [
+            "Atlur",
+            "B.Kodur",
+            "Badvel",
+            "Brahmamgarimattam",
+            "Chakrayapet",
+            "Chapad",
+            "Chennur",
+            "Chinthakommadinne",
+            "Duvvur",
+            "Gopavaram",
+            "Jammalamadugu",
+            "Kadapa",
+            "Kalasapadu",
+            "Kamalapuram",
+            "Khajipeta",
+            "Kondapuram",
+            "Lingala",
+            "Muddanur",
+            "Mylavaram",
+            "Nandalur",
+            "Peddamudiam",
+            "Pendlimarry",
+            "Porumamilla",
+            "Proddutur",
+            "Pulivendula",
+            "Rajampet",
+            "Rajupalem",
+            "S.Mydukur",
+            "Sidhout",
+            "Simhadripuram",
+            "Sri Avadhutha Kasinayana",
+            "T.Sundupalle",
+            "Thondur",
+            "Vallur",
+            "Veeraballe",
+            "Veerapunayunipalle",
+            "Vempalli",
+            "Vemula",
+            "Vontimitta",
+            "Yerraguntla"
+          ]
+        }
+      ]
+    },
+    {
+      "state": "KARNATAKA",
+      "districts": [
+        {
+          "district": "Bagalkote",
+          "taluks": [
+            "Badami",
+            "Bagalkot",
+            "Bilgi",
+            "Guledgudda",
+            "Hungund",
+            "Ilkal",
+            "Jamkhandi",
+            "Mudhol",
+            "Rabakavi Banahatti",
+            "Terdal"
+          ]
+        },
+        {
+          "district": "Ballari",
+          "taluks": [
+            "Ballari",
+            "Kampli",
+            "Kurugodu",
+            "Sandur",
+            "Siruguppa"
+          ]
+        },
+        {
+          "district": "Belagavi",
+          "taluks": [
+            "Athni",
+            "Bailahongala",
+            "Belagavi",
+            "Chikodi",
+            "Gokak",
+            "Hukkeri",
+            "Kagwad",
+            "Khanapur",
+            "Kittur",
+            "Mudalgi",
+            "Nippani",
+            "Ramdurg",
+            "Raybag",
+            "Savadatti",
+            "Yaragatti"
+          ]
+        },
+        {
+          "district": "Bengaluru Rural",
+          "taluks": [
+            "Devanahalli",
+            "Doddaballapura",
+            "Hosakote",
+            "Nelamangala"
+          ]
+        },
+        {
+          "district": "Bengaluru South",
+          "taluks": [
+            "Channapatna",
+            "Harohalli",
+            "Kanakapura",
+            "Magadi",
+            "Ramanagara"
+          ]
+        },
+        {
+          "district": "Bengaluru Urban",
+          "taluks": [
+            "Anekal",
+            "Bengaluru East",
+            "Bengaluru North",
+            "Bengaluru South",
+            "Yelahanka"
+          ]
+        },
+        {
+          "district": "Bidar",
+          "taluks": [
+            "Aurad",
+            "Basavakalyan",
+            "Bhalki",
+            "Bidar",
+            "Chitaguppa",
+            "Homnabad",
+            "Hulsoor",
+            "Kamalnagar"
+          ]
+        },
+        {
+          "district": "Chamarajanagar",
+          "taluks": [
+            "Chamarajanagar",
+            "Gundlupet",
+            "Hanur",
+            "Kollegal",
+            "Yelandur"
+          ]
+        },
+        {
+          "district": "Chikkaballapura",
+          "taluks": [
+            "Bagepalli",
+            "Chelur",
+            "Chikkaballapura",
+            "Chintamani",
+            "Gauribidanur",
+            "Gudibanda",
+            "Manchenahalli",
+            "Sidlaghatta"
+          ]
+        },
+        {
+          "district": "Chikkamagaluru",
+          "taluks": [
+            "Ajjampura",
+            "Chikkamagaluru",
+            "Kadur",
+            "Kalasa",
+            "Koppa",
+            "Mudigere",
+            "Narasimharajapura",
+            "Sringeri",
+            "Tarikere"
+          ]
+        },
+        {
+          "district": "Chitradurga",
+          "taluks": [
+            "Challakere",
+            "Chitradurga",
+            "Hiriyur",
+            "Holalkere",
+            "Hosdurga",
+            "Molakalmuru"
+          ]
+        },
+        {
+          "district": "Dakshina Kannada",
+          "taluks": [
+            "Bantval",
+            "Beltangadi",
+            "Kadaba",
+            "Mangaluru",
+            "Moodubidire",
+            "Mulki",
+            "Puttur",
+            "Sulya",
+            "Ullala"
+          ]
+        },
+        {
+          "district": "Davanagere",
+          "taluks": [
+            "Channagiri",
+            "Davanagere",
+            "Harihar",
+            "Honnali",
+            "Jagalur",
+            "Nyamathi"
+          ]
+        },
+        {
+          "district": "Dharwad",
+          "taluks": [
+            "Alnavar",
+            "Annigeri",
+            "Dharwad",
+            "Hubballi",
+            "Hubballi Urban",
+            "Kalghatgi",
+            "Kundgol",
+            "Navalgund"
+          ]
+        },
+        {
+          "district": "Gadag",
+          "taluks": [
+            "Gadag",
+            "Gajendragad",
+            "Laxmeshwar",
+            "Mundargi",
+            "Nargund",
+            "Ron",
+            "Shirahatti"
+          ]
+        },
+        {
+          "district": "Hassan",
+          "taluks": [
+            "Alur",
+            "Arkalgud",
+            "Arsikere",
+            "Belur",
+            "Channarayapatna",
+            "Hassan",
+            "Hole Narsipur",
+            "Sakleshpur"
+          ]
+        },
+        {
+          "district": "Haveri",
+          "taluks": [
+            "Byadgi",
+            "Hangal",
+            "Haveri",
+            "Hirekerur",
+            "Ranibennur",
+            "Rattihalli",
+            "Savanur",
+            "Shiggaon"
+          ]
+        },
+        {
+          "district": "Kalaburagi",
+          "taluks": [
+            "Afzalpur",
+            "Aland",
+            "Chincholi",
+            "Chittapur",
+            "Jevargi",
+            "Kalaburagi",
+            "Kalagi",
+            "Kamalapur",
+            "Sedam",
+            "Shahabad",
+            "Yadrami"
+          ]
+        },
+        {
+          "district": "Kodagu",
+          "taluks": [
+            "Kushalnagar",
+            "Madikeri",
+            "Ponnampet",
+            "Somvarpet",
+            "Virajpet"
+          ]
+        },
+        {
+          "district": "Kolar",
+          "taluks": [
+            "Bangarapet",
+            "Kolar",
+            "Kolar Gold Field",
+            "Malur",
+            "Mulbagal",
+            "Srinivaspur"
+          ]
+        },
+        {
+          "district": "Koppal",
+          "taluks": [
+            "Gangawati",
+            "Kanakagiri",
+            "Karatagi",
+            "Koppal",
+            "Kukanoor",
+            "Kushtagi",
+            "Yelbarga"
+          ]
+        },
+        {
+          "district": "Mandya",
+          "taluks": [
+            "Krishnarajpet",
+            "Maddur",
+            "Malavalli",
+            "Mandya",
+            "Nagamangala",
+            "Pandavapura",
+            "Shrirangapattana"
+          ]
+        },
+        {
+          "district": "Mysuru",
+          "taluks": [
+            "Heggadadevankote",
+            "Hunsur",
+            "Krishnarajanagara",
+            "Mysuru",
+            "Nanjangud",
+            "Piriyapatna",
+            "Saligrama",
+            "Saraguru",
+            "Tirumakudal - Narsipur"
+          ]
+        },
+        {
+          "district": "Raichur",
+          "taluks": [
+            "Arakera",
+            "Devadurga",
+            "Lingasugur",
+            "Manvi",
+            "Maski",
+            "Raichur",
+            "Sindhnur",
+            "Sirwar"
+          ]
+        },
+        {
+          "district": "Shivamogga",
+          "taluks": [
+            "Bhadravati",
+            "Hosanagara",
+            "Sagar",
+            "Shikarpur",
+            "Shivamogga",
+            "Sorab",
+            "Tirthahalli"
+          ]
+        },
+        {
+          "district": "Tumakuru",
+          "taluks": [
+            "Chiknayakanhalli",
+            "Gubbi",
+            "Koratagere",
+            "Kunigal",
+            "Madhugiri",
+            "Pavagada",
+            "Sira",
+            "Tiptur",
+            "Tumakuru",
+            "Turuvekere"
+          ]
+        },
+        {
+          "district": "Udupi",
+          "taluks": [
+            "Bainduru",
+            "Brahmavara",
+            "Hebri",
+            "Kapu",
+            "Karkal",
+            "Kundapura",
+            "Udupi"
+          ]
+        },
+        {
+          "district": "Uttara Kannada",
+          "taluks": [
+            "Ankola",
+            "Bhatkal",
+            "Dandeli",
+            "Haliyal",
+            "Honavar",
+            "Karwar",
+            "Kumta",
+            "Mundgod",
+            "Siddapur",
+            "Sirsi",
+            "Supa",
+            "Yellapur"
+          ]
+        },
+        {
+          "district": "Vijayanagara",
+          "taluks": [
+            "Hadagalli",
+            "Hagaribommanahalli",
+            "Harapanahalli",
+            "Hosapete",
+            "Kotturu",
+            "Kudligi"
+          ]
+        },
+        {
+          "district": "Vijayapura",
+          "taluks": [
+            "Almel",
+            "Babaleshwar",
+            "Basavana Bagevadi",
+            "Chadchan",
+            "Devara Hipparagi",
+            "Indi",
+            "Kolhar",
+            "Muddebihal",
+            "Nidagundi",
+            "Sindgi",
+            "Talikoti",
+            "Tikota",
+            "Vijayapura"
+          ]
+        },
+        {
+          "district": "Yadgir",
+          "taluks": [
+            "Gurmitakal",
+            "Hunasagi",
+            "Shahpur",
+            "Shorapur",
+            "Wadagera",
+            "Yadgir"
+          ]
+        }
+      ]
+    },
+    {
+      "state": "KERALA",
+      "districts": [
+        {
+          "district": "Alappuzha",
+          "taluks": [
+            "Ambalappuzha",
+            "Chengannur",
+            "Cherthala",
+            "Karthikappally",
+            "Kuttanad",
+            "Mavelikkara"
+          ]
+        },
+        {
+          "district": "Ernakulam",
+          "taluks": [
+            "Aluva",
+            "Kanayannur",
+            "Kochi",
+            "Kothamangalam",
+            "Kunnathunad",
+            "Muvattupuzha",
+            "Paravur"
+          ]
+        },
+        {
+          "district": "Idukki",
+          "taluks": [
+            "Devikulam",
+            "Idukki",
+            "Peerumade",
+            "Thodupuzha",
+            "Udumbanchola"
+          ]
+        },
+        {
+          "district": "Kannur",
+          "taluks": [
+            "Iritty",
+            "Kannur",
+            "Payyannur",
+            "Taliparamba",
+            "Thalassery"
+          ]
+        },
+        {
+          "district": "Kasaragod",
+          "taluks": [
+            "Hosdurg",
+            "Kasaragod",
+            "Manjeswaram",
+            "Vellarikkundu"
+          ]
+        },
+        {
+          "district": "Kollam",
+          "taluks": [
+            "Karunagappally",
+            "Kollam",
+            "Kottarakkara",
+            "Kunnathur",
+            "Pathanapuram",
+            "Punalur"
+          ]
+        },
+        {
+          "district": "Kottayam",
+          "taluks": [
+            "Changanassery",
+            "Kanjirappally",
+            "Kottayam",
+            "Meenachil",
+            "Vaikom"
+          ]
+        },
+        {
+          "district": "Kozhikode",
+          "taluks": [
+            "Koyilandi",
+            "Kozhikode",
+            "Thamarassery",
+            "Vatakara"
+          ]
+        },
+        {
+          "district": "Malappuram",
+          "taluks": [
+            "Ernad",
+            "Kondotty",
+            "Nilambur",
+            "Perinthalmanna",
+            "Ponnani",
+            "Tirur",
+            "Tirurangadi"
+          ]
+        },
+        {
+          "district": "Palakkad",
+          "taluks": [
+            "Alathur",
+            "Chittur",
+            "Mannarkad",
+            "Ottappalam",
+            "Palakkad",
+            "Pattambi",
+            "Tribal Taluk Office Attappadi"
+          ]
+        },
+        {
+          "district": "Pathanamthitta",
+          "taluks": [
+            "Adoor",
+            "Konni",
+            "Kozhenchery",
+            "Mallappally",
+            "Ranni",
+            "Thiruvalla"
+          ]
+        },
+        {
+          "district": "Thiruvananthapuram",
+          "taluks": [
+            "Chirayinkeezhu",
+            "Kattakkada",
+            "Nedumangad",
+            "Neyyattinkara",
+            "Thiruvananthapuram",
+            "Varkala"
+          ]
+        },
+        {
+          "district": "Thrissur",
+          "taluks": [
+            "Chalakkudy",
+            "Chavakkad",
+            "Kodungallur",
+            "Kunnamkulam",
+            "Mukundapuram",
+            "Talappilly",
+            "Thrissur"
+          ]
+        },
+        {
+          "district": "Wayanad",
+          "taluks": [
+            "Mananthavady",
+            "Sulthanbathery",
+            "Vythiri"
+          ]
+        }
+      ]
+    },
+    {
+      "state": "PUDUCHERRY",
+      "districts": [
+        {
+          "district": "Karaikal",
+          "taluks": [
+            "Karaikal",
+            "Thirunallar"
+          ]
+        },
+        {
+          "district": "Puducherry",
+          "taluks": [
+            "Bahour",
+            "Mahe",
+            "Oulgaret",
+            "Puducherry",
+            "Villianur",
+            "Yanam"
+          ]
+        }
+      ]
+    },
+    {
+      "state": "TAMIL NADU",
+      "districts": [
+        {
+          "district": "Ariyalur",
+          "taluks": [
+            "Andimadam",
+            "Ariyalur",
+            "Sendurai",
+            "Udayarpalayam"
+          ]
+        },
+        {
+          "district": "Chengalpattu",
+          "taluks": [
+            "Chengalpattu",
+            "Cheyyur",
+            "Maduranthakam",
+            "Pallavaram",
+            "Tambaram",
+            "Tirukalukundram",
+            "Tiruporur",
+            "Vandalur"
+          ]
+        },
+        {
+          "district": "Chennai",
+          "taluks": [
+            "Alandur",
+            "Ambattur",
+            "Aminjikarai",
+            "Ayanavaram",
+            "Egmore",
+            "Guindy",
+            "Kolathur",
+            "Maduravoyal",
+            "Mambalam",
+            "Mathavaram",
+            "Mylapore",
+            "Perambur",
+            "Purasawalkam",
+            "Sholinganallur",
+            "Tiruvottiyur",
+            "Tondiarpet",
+            "Velachery"
+          ]
+        },
+        {
+          "district": "Coimbatore",
+          "taluks": [
+            "Anaimalai",
+            "Annur",
+            "Coimbatore North",
+            "Coimbatore South",
+            "Kinathukadavu",
+            "Madukkari",
+            "Mettupalayam",
+            "Perur",
+            "Pollachi",
+            "Sulur",
+            "Valparai"
+          ]
+        },
+        {
+          "district": "Cuddalore",
+          "taluks": [
+            "Bhuvanagiri",
+            "Chidambaram",
+            "Cuddalore",
+            "Kattumannarkoil",
+            "Kurinjipadi",
+            "Panruti",
+            "Srimushnam",
+            "Tittakudi",
+            "Veppur",
+            "Virudhachalam"
+          ]
+        },
+        {
+          "district": "Dharmapuri",
+          "taluks": [
+            "Dharmapuri",
+            "Harur",
+            "Karimangalam",
+            "Nallampalli",
+            "Palakkodu",
+            "Pappireddipatti",
+            "Pennagaram"
+          ]
+        },
+        {
+          "district": "Dindigul",
+          "taluks": [
+            "Athoor",
+            "Dindiguleast",
+            "Dindigulwest",
+            "Gujiliamparai",
+            "Kodaikanal",
+            "Natham",
+            "Nilakkottai",
+            "Oddanchatram",
+            "Palani",
+            "Vedasandur"
+          ]
+        },
+        {
+          "district": "Erode",
+          "taluks": [
+            "Anthiyur",
+            "Bhavani",
+            "Erode",
+            "Gobichettipalayam",
+            "Kodumudi",
+            "Modakkurichi",
+            "Nambiyur",
+            "Perundurai",
+            "Sathyamangalam",
+            "Thalavadi"
+          ]
+        },
+        {
+          "district": "Kallakurichi",
+          "taluks": [
+            "Chinnasalem",
+            "Kallakkurichi",
+            "Kalvarayan Hills",
+            "Sankarapuram",
+            "Tirukkoyilur",
+            "Ulundurpettai",
+            "Vanapuram"
+          ]
+        },
+        {
+          "district": "Kancheepuram",
+          "taluks": [
+            "Kancheepuram",
+            "Kundrathur",
+            "Sriperumbudur",
+            "Uthiramerur",
+            "Walajabad"
+          ]
+        },
+        {
+          "district": "Kanniyakumari",
+          "taluks": [
+            "Agastheeswaram",
+            "Kalkulam",
+            "Killiyoor",
+            "Thiruvattar",
+            "Thovala",
+            "Vilavancode"
+          ]
+        },
+        {
+          "district": "Karur",
+          "taluks": [
+            "Aravakurichi",
+            "Kadavur",
+            "Karur",
+            "Krishnarayapuram",
+            "Kulithalai",
+            "Manmangalam",
+            "Pugalur"
+          ]
+        },
+        {
+          "district": "Krishnagiri",
+          "taluks": [
+            "Anchetty",
+            "Bargur",
+            "Denkanikottai",
+            "Hosur",
+            "Krishnagiri",
+            "Pochampalli",
+            "Shoolagiri",
+            "Uthangarai"
+          ]
+        },
+        {
+          "district": "Madurai",
+          "taluks": [
+            "Kalligudi",
+            "Madurai East",
+            "Madurai North",
+            "Madurai South",
+            "Madurai West",
+            "Melur",
+            "Peraiyur",
+            "Thirumangalam",
+            "Thirupparankundram",
+            "Usilampatti",
+            "Vadipatti"
+          ]
+        },
+        {
+          "district": "Mayiladuthurai",
+          "taluks": [
+            "Kuthalam",
+            "Mayiladuthurai",
+            "Sirkali",
+            "Tharangambadi"
+          ]
+        },
+        {
+          "district": "Nagapattinam",
+          "taluks": [
+            "Kilvelur",
+            "Nagapattinam",
+            "Thirukkuvalai",
+            "Vedaranyam"
+          ]
+        },
+        {
+          "district": "Namakkal",
+          "taluks": [
+            "Kolli Hills",
+            "Kumarapalayam",
+            "Mohanur",
+            "Namakkal",
+            "Paramathi-Velur",
+            "Rasipuram",
+            "Sendamangalam",
+            "Tiruchengode"
+          ]
+        },
+        {
+          "district": "Perambalur",
+          "taluks": [
+            "Alathur",
+            "Kunnam",
+            "Perambalur",
+            "Veppanthattai"
+          ]
+        },
+        {
+          "district": "Pudukkottai",
+          "taluks": [
+            "Alangudi",
+            "Aranthangi",
+            "Avudayarkoil",
+            "Gandarvakkottai",
+            "Iluppur",
+            "Karambakudi",
+            "Kulathur",
+            "Manamelkudi",
+            "Ponnamaravathi",
+            "Pudukkottai",
+            "Thirumayam",
+            "Viralimalai"
+          ]
+        },
+        {
+          "district": "Ramanathapuram",
+          "taluks": [
+            "Kadaladi",
+            "Kamuthi",
+            "Kilakarai",
+            "Mudukulathur",
+            "Paramakudi",
+            "Rajasingamangalam",
+            "Ramanathapuram",
+            "Rameswaram",
+            "Tiruvadanai"
+          ]
+        },
+        {
+          "district": "Ranipet",
+          "taluks": [
+            "Arakonam",
+            "Arcot",
+            "Kalavai",
+            "Nemili",
+            "Sholinghur",
+            "Wallajah"
+          ]
+        },
+        {
+          "district": "Salem",
+          "taluks": [
+            "Attur",
+            "Edappadi",
+            "Gangavalli",
+            "Kadayampatti",
+            "Mettur",
+            "Omalur",
+            "Pethanaickanpalayam",
+            "Salem",
+            "Salem South",
+            "Salem West",
+            "Sankari",
+            "Thalaivasal",
+            "Vazhapadi",
+            "Yercaud"
+          ]
+        },
+        {
+          "district": "Sivaganga",
+          "taluks": [
+            "Devakottai",
+            "Ilayangudi",
+            "Kalaiyarkoil",
+            "Karaikkudi",
+            "Manamadurai",
+            "Singampunari",
+            "Sivaganga",
+            "Thiruppathur",
+            "Thiruppuvanam"
+          ]
+        },
+        {
+          "district": "Tenkasi",
+          "taluks": [
+            "Alangulam",
+            "Kadayanallur",
+            "Sankarankoil",
+            "Shenkottai",
+            "Sivagiri",
+            "Tenkasi",
+            "Tiruvengadam",
+            "Veerakeralamputhur"
+          ]
+        },
+        {
+          "district": "Thanjavur",
+          "taluks": [
+            "Budalur",
+            "Kumbakonam",
+            "Orathanadu",
+            "Papanasam",
+            "Pattukkottai",
+            "Peravurani",
+            "Thanjavur",
+            "Thiruvaiyaru",
+            "Thiruvidaimarudur",
+            "Thiruvonam"
+          ]
+        },
+        {
+          "district": "The Nilgiris",
+          "taluks": [
+            "Coonoor",
+            "Gudalur",
+            "Kotagiri",
+            "Kundah",
+            "Panthalur",
+            "Udhagamandalam"
+          ]
+        },
+        {
+          "district": "Theni",
+          "taluks": [
+            "Andipatti",
+            "Bodinayakanur",
+            "Periyakulam",
+            "Theni",
+            "Uthamapalayam"
+          ]
+        },
+        {
+          "district": "Thiruvallur",
+          "taluks": [
+            "Avadi",
+            "Gummidipoondi",
+            "Pallipattu",
+            "Ponneri",
+            "Poonamallee",
+            "R K Pet",
+            "Thiruvallur",
+            "Tiruttani",
+            "Uthukkottai"
+          ]
+        },
+        {
+          "district": "Thiruvarur",
+          "taluks": [
+            "Koothanallur",
+            "Kudavasal",
+            "Mannargudi",
+            "Muthupettai",
+            "Nannilam",
+            "Needamangalam",
+            "Thiruthuraipoondi",
+            "Thiruvarur",
+            "Valangaiman"
+          ]
+        },
+        {
+          "district": "Thoothukkudi",
+          "taluks": [
+            "Eral",
+            "Ettayapuram",
+            "Kayathar",
+            "Kovilpatti",
+            "Ottapidaram",
+            "Sathankulam",
+            "Srivaikuntam",
+            "Thoothukkudi",
+            "Tiruchendur",
+            "Vilathikulam"
+          ]
+        },
+        {
+          "district": "Tiruchirappalli",
+          "taluks": [
+            "Lalgudi",
+            "Manachanallur",
+            "Manapparai",
+            "Marungapuri",
+            "Musiri",
+            "Srirangam",
+            "Thiruverumbur",
+            "Thottiyam",
+            "Thuraiyur",
+            "Tiruchirappalli East",
+            "Tiruchirappalli West"
+          ]
+        },
+        {
+          "district": "Tirunelveli",
+          "taluks": [
+            "Ambasamudram",
+            "Cheranmahadevi",
+            "Manur",
+            "Nanguneri",
+            "Palayamkottai",
+            "Radhapuram",
+            "Tirunelveli",
+            "Tisayanvilai"
+          ]
+        },
+        {
+          "district": "Tirupathur",
+          "taluks": [
+            "Ambur",
+            "Natrampalli",
+            "Tirupathur",
+            "Vaniyambadi"
+          ]
+        },
+        {
+          "district": "Tiruppur",
+          "taluks": [
+            "Avinashi",
+            "Dharapuram",
+            "Kangeyam",
+            "Madathukulam",
+            "Palladam",
+            "Tiruppurnorth",
+            "Tiruppursouth",
+            "Udumalaipettai",
+            "Uthukuli"
+          ]
+        },
+        {
+          "district": "Tiruvannamalai",
+          "taluks": [
+            "Arani",
+            "Chengam",
+            "Chetpet",
+            "Cheyyar",
+            "Jamunamarathoor",
+            "Kalasapakkam",
+            "Kilpennathur",
+            "Polur",
+            "Thandrampet",
+            "Tiruvannamalai",
+            "Vandavasi",
+            "Vembakkam"
+          ]
+        },
+        {
+          "district": "Vellore",
+          "taluks": [
+            "Anaicut",
+            "Gudiyatham",
+            "K V Kuppam",
+            "Katpadi",
+            "Pernambut",
+            "Vellore"
+          ]
+        },
+        {
+          "district": "Viluppuram",
+          "taluks": [
+            "Gingee",
+            "Kandachipuram",
+            "Marakanam",
+            "Melmalaiyanur",
+            "Thiruvennainallur",
+            "Tindivanam",
+            "Vanur",
+            "Vikravandi",
+            "Viluppuram"
+          ]
+        },
+        {
+          "district": "Virudhunagar",
+          "taluks": [
+            "Aruppukkottai",
+            "Kariapatti",
+            "Rajapalayam",
+            "Sattur",
+            "Sivakasi",
+            "Srivilliputhur",
+            "Tiruchuli",
+            "Vembakottai",
+            "Virudhunagar",
+            "Watrap"
+          ]
+        }
+      ]
+    },
+    {
+      "state": "TELANGANA",
+      "districts": [
+        {
+          "district": "Adilabad",
+          "taluks": [
+            "Adilabad Rural",
+            "Adilabad Urban",
+            "Bazarhatnoor",
+            "Bela",
+            "Bheempur",
+            "Bhoraj",
+            "Boath",
+            "Gadiguda",
+            "Gudihatnoor",
+            "Ichoda",
+            "Inderavelly",
+            "Jainath",
+            "Mavala",
+            "Narnoor",
+            "Neradigonda",
+            "Sathnala",
+            "Sirikonda",
+            "Sonala",
+            "Talamadugu",
+            "Tamsi",
+            "Utnoor"
+          ]
+        },
+        {
+          "district": "Bhadradri Kothagudem",
+          "taluks": [
+            "Allapalli",
+            "Annapureddypalli",
+            "Aswapuram",
+            "Aswaraopeta",
+            "Bhadrachalam",
+            "Burgampahad",
+            "Chandrugonda",
+            "Cherla",
+            "Chunchupalli",
+            "Dammapeta",
+            "Dummugudem",
+            "Gundala",
+            "Julurpadu",
+            "Karakagudem",
+            "Laxmidevipalli",
+            "Manuguru",
+            "Mulkalapally",
+            "Palvoncha",
+            "Pinapaka",
+            "Sujathanagar",
+            "Tekulapalli",
+            "Yellandu"
+          ]
+        },
+        {
+          "district": "Hanumakonda",
+          "taluks": [
+            "Athmakur",
+            "Bheemadevarpalli",
+            "Damera",
+            "Dharmasagar",
+            "Elkathurthy",
+            "Hanamkonda",
+            "Hasanparthy",
+            "Inavole",
+            "Kamalapur",
+            "Khazipet",
+            "Nadikuda",
+            "Parkal",
+            "Shayampet",
+            "Velair"
+          ]
+        },
+        {
+          "district": "Hyderabad",
+          "taluks": [
+            "Amberpet",
+            "Ameerpet",
+            "Asif Nagar",
+            "Bahadurpura",
+            "Bandlaguda",
+            "Charminar",
+            "Golconda",
+            "Himayatnagar",
+            "Khairatabad",
+            "Marredpally",
+            "Musheerabad",
+            "Nampally",
+            "Saidabad",
+            "Secunderabad",
+            "Shaikpet",
+            "Tirumalgiri"
+          ]
+        },
+        {
+          "district": "Jagitial",
+          "taluks": [
+            "Beerpur",
+            "Bheemaram (20)",
+            "Buggaram",
+            "Dharmapuri",
+            "Endapalli",
+            "Gollapalli",
+            "Ibrahimpatnam",
+            "Jagitial",
+            "Jagitial Rural",
+            "Kathlapur",
+            "Kodimial",
+            "Korutla",
+            "Mallapur",
+            "Mallial",
+            "Medipalli",
+            "Metpalli",
+            "Pegadapalli",
+            "Raikal",
+            "Sarangapur",
+            "Velgatur"
+          ]
+        },
+        {
+          "district": "Jangoan",
+          "taluks": [
+            "Bachannapet",
+            "Chilpur",
+            "Devaruppula",
+            "Ghanpur (Station)",
+            "Jangoan",
+            "Kodakandla",
+            "Lingalaghanpur",
+            "Narmetta",
+            "Palakurthy",
+            "Ragunathpally",
+            "Tharigoppula",
+            "Zaffergadh"
+          ]
+        },
+        {
+          "district": "Jayashankar Bhupalapally",
+          "taluks": [
+            "Bhupalpally",
+            "Chityal",
+            "Ghanpur (Mulug)",
+            "Kataram",
+            "Kothapallygori",
+            "Mahadevpur",
+            "Malharrao",
+            "Mogullapally",
+            "Mutharam Mahadevpur",
+            "Palimela",
+            "Regonda",
+            "Tekumatla"
+          ]
+        },
+        {
+          "district": "Jogulamba Gadwal",
+          "taluks": [
+            "Alampur",
+            "Dharoor",
+            "Gadwal",
+            "Ghattu",
+            "Ieeja",
+            "Itikyala",
+            "Kaloor Thimmandoddi",
+            "Maldakal",
+            "Manopad",
+            "Rajoli",
+            "Undavelly",
+            "Waddepally",
+            "Yerravalli"
+          ]
+        },
+        {
+          "district": "Kamareddy",
+          "taluks": [
+            "Banswada",
+            "Bhiknoor",
+            "Bibipet",
+            "Bichkunda",
+            "Birkur",
+            "Domakonda",
+            "Dongli",
+            "Gandhari",
+            "Jukkal",
+            "Kamareddy",
+            "Lingampet",
+            "Machareddy",
+            "Madnoor",
+            "Mohammadnagar",
+            "Nagireddypet",
+            "Nasurullabad",
+            "Nizamsagar",
+            "Palwancha",
+            "Pedda Kodapgal",
+            "Pitlam",
+            "Rajampet",
+            "Ramareddy",
+            "Sadashivanagar",
+            "Tadwai",
+            "Yellareddy"
+          ]
+        },
+        {
+          "district": "Karimnagar",
+          "taluks": [
+            "Chigurumamidi",
+            "Choppadandi",
+            "Ellandakunta",
+            "Gangadhara",
+            "Ganneruvaram",
+            "Huzurabad",
+            "Jammikunta",
+            "Karimnagar",
+            "Karimnagar Rural",
+            "Kothapally",
+            "Manakondur",
+            "Ramadugu",
+            "Shankarapatnam",
+            "Thimmapur Lmd",
+            "V.Saidapur",
+            "Veenavanka"
+          ]
+        },
+        {
+          "district": "Khammam",
+          "taluks": [
+            "Bonakal",
+            "Chinthakani",
+            "Enkoor",
+            "Kalluru",
+            "Kamepalli",
+            "Khammam (Rural)",
+            "Konijerla",
+            "Kusumanchi",
+            "Madhira",
+            "Mudigonda",
+            "Nelakondapalli",
+            "Penuballi",
+            "Raghunadhapalem",
+            "Sathupalli",
+            "Singareni",
+            "Thallada",
+            "Tirumalayapalem",
+            "Vemsoor",
+            "Wyra",
+            "Yerrupalem"
+          ]
+        },
+        {
+          "district": "Kumuram Bheem Asifabad",
+          "taluks": [
+            "Asifabad",
+            "Bejjur",
+            "Chintalamanepally",
+            "Dahegoan",
+            "Jainoor",
+            "Kagaznagar",
+            "Kerameri",
+            "Koutala",
+            "Lingapur",
+            "Penchicalpet",
+            "Rebbena",
+            "Sirpur (T)",
+            "Sirpur U",
+            "Tiryani",
+            "Wankidi"
+          ]
+        },
+        {
+          "district": "Mahabubabad",
+          "taluks": [
+            "Bayyaram",
+            "Chinnagudur",
+            "Danthalapalle",
+            "Dornakal",
+            "Gangaram",
+            "Garla",
+            "Gudur",
+            "Inugurthy",
+            "Kesamudram",
+            "Kothaguda",
+            "Kuravi",
+            "Mahabubabad",
+            "Maripeda",
+            "Narsimhulapet",
+            "Nellikudur",
+            "Peddavangara",
+            "Seerole",
+            "Thorrur"
+          ]
+        },
+        {
+          "district": "Mahabubnagar",
+          "taluks": [
+            "Addakal",
+            "Balanagar",
+            "Bhoothpur",
+            "Chinnachintakunta",
+            "Devarakadra",
+            "Gandeed",
+            "Hanwada",
+            "Jadcherla",
+            "Koilkonda",
+            "Koukuntla",
+            "Mahabubnagar Rural",
+            "Mahabubnagar Urban",
+            "Midjil",
+            "Mohammadabad",
+            "Moosapet",
+            "Nawabpet",
+            "Rajapur"
+          ]
+        },
+        {
+          "district": "Mancherial",
+          "taluks": [
+            "Bellampally",
+            "Bheemaram",
+            "Bheemini",
+            "Chennur",
+            "Dandepally",
+            "Hajipur",
+            "Jaipur",
+            "Jannaram",
+            "Kannepally",
+            "Kasipet",
+            "Kotapally",
+            "Luxettipet",
+            "Mancherial",
+            "Mandamarri",
+            "Naspur",
+            "Nennel",
+            "Tandur",
+            "Vemanpally"
+          ]
+        },
+        {
+          "district": "Medak",
+          "taluks": [
+            "Alladurg",
+            "Chegunta",
+            "Chilpched",
+            "Havelighanapur",
+            "Kowdipally",
+            "Kulcharam",
+            "Manoharabad",
+            "Masaipet",
+            "Medak",
+            "Narsapur",
+            "Narsingi",
+            "Nizampet",
+            "Papannapet",
+            "Ramayampet",
+            "Regode",
+            "Shankarampet (A)",
+            "Shankarampet (R)",
+            "Shivampet",
+            "Tekmal",
+            "Toopran",
+            "Yeldurthy"
+          ]
+        },
+        {
+          "district": "Medchal Malkajgiri",
+          "taluks": [
+            "Alwal",
+            "Bachupally",
+            "Balanagar",
+            "Gandimaisamma Dundigal",
+            "Ghatkesar",
+            "Kapra",
+            "Keesara",
+            "Kukatpally",
+            "Malkajgiri",
+            "Medchal",
+            "Medipally",
+            "Muduchinthalapally",
+            "Qutballapur",
+            "Shamirpet",
+            "Uppal"
+          ]
+        },
+        {
+          "district": "Mulugu",
+          "taluks": [
+            "Eturunagaram",
+            "Govindaraopet",
+            "Kannaigudem",
+            "Mallampally",
+            "Mangapet",
+            "Mulug",
+            "Tadvai",
+            "Venkatapur",
+            "Venkatapuram",
+            "Wajedu"
+          ]
+        },
+        {
+          "district": "Nagarkurnool",
+          "taluks": [
+            "Achampet",
+            "Amrabad",
+            "Balmoor",
+            "Bijinapally",
+            "Charakonda",
+            "Kalwakurthy",
+            "Kodair",
+            "Kollapur",
+            "Lingal",
+            "Nagarkurnool",
+            "Padara",
+            "Peddakothapally",
+            "Pentlavelli",
+            "Tadoor",
+            "Telkapally",
+            "Thimmajipet",
+            "Uppununthala",
+            "Urkonda",
+            "Vangoor",
+            "Veldanda"
+          ]
+        },
+        {
+          "district": "Nalgonda",
+          "taluks": [
+            "Adavidevulapalli",
+            "Anumula",
+            "Chandampeta",
+            "Chandur",
+            "Chinthapally",
+            "Chityal",
+            "Dameracherla",
+            "Devarakonda",
+            "Gattuppal",
+            "Gudipally",
+            "Gundlapally",
+            "Gurrampode",
+            "Kanagal",
+            "Kattangur",
+            "Kethepally",
+            "Kondamallepally",
+            "Madugulapally",
+            "Marriguda",
+            "Miryalaguda",
+            "Munugode",
+            "Nakrekal",
+            "Nalgonda",
+            "Nampally",
+            "Narketpally",
+            "Neredugommu",
+            "Nidmanoor",
+            "Pedda Adesherlapally",
+            "Peddavoora",
+            "Shaligouraram",
+            "Thipparthy",
+            "Tirumalagiri Sagar",
+            "Tripuraram",
+            "Vemulapally"
+          ]
+        },
+        {
+          "district": "Narayanpet",
+          "taluks": [
+            "Damargidda",
+            "Dhanwada",
+            "Gundumal",
+            "Kosgi",
+            "Kothapally (15)",
+            "Krishna",
+            "Maddur",
+            "Maganoor",
+            "Makthal",
+            "Marikal",
+            "Narayanpet",
+            "Narwa",
+            "Utkoor"
+          ]
+        },
+        {
+          "district": "Nirmal",
+          "taluks": [
+            "Basar",
+            "Bhainsa",
+            "Dasturabad",
+            "Dilawarpur",
+            "Kaddam Peddur",
+            "Khanapur",
+            "Kubeer",
+            "Kuntala",
+            "Laxmanchanda",
+            "Lokeswaram",
+            "Mamada",
+            "Mudhole",
+            "Narsapur G",
+            "Nirmal Rural",
+            "Nirmal U",
+            "Pembi",
+            "Sarangapur",
+            "Soan",
+            "Tanoor"
+          ]
+        },
+        {
+          "district": "Nizamabad",
+          "taluks": [
+            "Aloor",
+            "Armoor",
+            "Balkonda",
+            "Bheemgal",
+            "Bodhan",
+            "Chandur",
+            "Dharpally",
+            "Dichpally",
+            "Donkeshwar",
+            "Indalwai",
+            "Jakranpally",
+            "Kammarpally",
+            "Kotagiri",
+            "Makloor",
+            "Mendora",
+            "Morthad",
+            "Mosara",
+            "Mugpal",
+            "Mupkal",
+            "Nandipet",
+            "Navipet",
+            "Nizamabad Rural",
+            "Nizamabad South",
+            "Pothangal",
+            "Renjal",
+            "Rudrur",
+            "Saloora",
+            "Sirikonda",
+            "Vailpoor",
+            "Varni",
+            "Yedapally",
+            "Yergatla"
+          ]
+        },
+        {
+          "district": "Peddapalli",
+          "taluks": [
+            "Anthergaon",
+            "Dharmaram",
+            "Eligaid",
+            "Julapalli",
+            "Kamanpur",
+            "Manthani",
+            "Mutharam (Manthani)",
+            "Odela",
+            "Palakurthy",
+            "Peddapalli",
+            "Ramagiri",
+            "Ramagundam",
+            "Srirampur",
+            "Sulthanabad"
+          ]
+        },
+        {
+          "district": "Rajanna Sircilla",
+          "taluks": [
+            "Boinpalli",
+            "Chandurthi",
+            "Gambhiraopet",
+            "Illanthakunta",
+            "Konaraopet",
+            "Mustabad",
+            "Rudrangi",
+            "Sircilla",
+            "Thangallapalli",
+            "Veernapalli",
+            "Vemulawada",
+            "Vemulawada Rural",
+            "Yellareddipet"
+          ]
+        },
+        {
+          "district": "Ranga Reddy",
+          "taluks": [
+            "Abdullapurmet",
+            "Amangal",
+            "Balapur",
+            "Chevella",
+            "Farooqnagar",
+            "Gandipet",
+            "Hayathnagar",
+            "Ibrahimpatnam",
+            "Jilled Chowdergudem",
+            "Kadthal",
+            "Kandukur",
+            "Keshampet",
+            "Kondurg",
+            "Kothur",
+            "Madgul",
+            "Maheshwaram",
+            "Manchal",
+            "Moinabad",
+            "Nandigama",
+            "Rajendranagar",
+            "Saroornagar",
+            "Shabad",
+            "Shamshabad",
+            "Shankarpalle",
+            "Thalakondapally",
+            "Yacharam"
+          ]
+        },
+        {
+          "district": "Sangareddy",
+          "taluks": [
+            "Ameenpur",
+            "Andole",
+            "Chowtakur",
+            "Gummadidala",
+            "Hathnoora",
+            "Jharasangam",
+            "Jinnaram",
+            "Kalher",
+            "Kandi",
+            "Kangti",
+            "Kohir",
+            "Kondapur",
+            "Manoor",
+            "Mogudampally",
+            "Munipally",
+            "Nagalgidda",
+            "Narayankhed",
+            "Nizampet (28)",
+            "Nyalkal",
+            "Patancheru",
+            "Pulkal",
+            "Raikode",
+            "Ramchandrapuram",
+            "Sadasivpet",
+            "Sangareddy",
+            "Sirgapoor",
+            "Vatpally",
+            "Zahirabad"
+          ]
+        },
+        {
+          "district": "Siddipet",
+          "taluks": [
+            "Akberpet-Bhoompally",
+            "Akkannapet",
+            "Bejjanki",
+            "Cherial",
+            "Chinnakodur",
+            "Dhoolmitta",
+            "Doultabad",
+            "Dubbak",
+            "Gajwel",
+            "Husnabad",
+            "Jagdevpur",
+            "Koheda",
+            "Komuravelli",
+            "Kondapak",
+            "Kukunoorpally",
+            "Maddur",
+            "Markook",
+            "Mirdoddi",
+            "Mulug",
+            "Nangnoor",
+            "Narayanaraopet",
+            "Raipole",
+            "Siddipet Rural",
+            "Siddipet Urban",
+            "Thoguta",
+            "Wargal"
+          ]
+        },
+        {
+          "district": "Suryapet",
+          "taluks": [
+            "Ananthagiri",
+            "Atmakur (S)",
+            "Chilkur",
+            "Chinthalapalem",
+            "Chivemla",
+            "Garidepally",
+            "Huzurnagar",
+            "Jajireddygudem",
+            "Kodad",
+            "Maddirala",
+            "Mattampally",
+            "Mellachervu",
+            "Mothey",
+            "Munagala",
+            "Nadigudem",
+            "Nagaram",
+            "Nereducherla",
+            "Nuthanakal",
+            "Palakeedu",
+            "Penpahad",
+            "Suryapet",
+            "Thirumalagiri",
+            "Thungaturthy"
+          ]
+        },
+        {
+          "district": "Vikarabad",
+          "taluks": [
+            "Bantwaram",
+            "Basheerabad",
+            "Bomaraspeta",
+            "Chowdapur",
+            "Dharur",
+            "Doma",
+            "Doulathabad",
+            "Dudyal",
+            "Kodangal",
+            "Kotepally",
+            "Kulkacharla",
+            "Marpalle",
+            "Mominpet",
+            "Nawabpet",
+            "Pargi",
+            "Peddemul",
+            "Pudur",
+            "Tandur",
+            "Vikarabad",
+            "Yelal"
+          ]
+        },
+        {
+          "district": "Wanaparthy",
+          "taluks": [
+            "Amarchintha",
+            "Atmakur",
+            "Chinnambavi",
+            "Ghanpur",
+            "Gopalpeta",
+            "Kothakota",
+            "Madanapur",
+            "Pangal",
+            "Pebbair",
+            "Peddamandadi",
+            "Revally",
+            "Srirangapur",
+            "Wanaparthy",
+            "Weepangandla",
+            "Yedula"
+          ]
+        },
+        {
+          "district": "Warangal",
+          "taluks": [
+            "Chennaraopet",
+            "Duggondi",
+            "Geesugonda",
+            "Khanapur",
+            "Khila Warangal",
+            "Nallabelli",
+            "Narsampet",
+            "Nekkonda",
+            "Parvathagiri",
+            "Rayaparthy",
+            "Sangem",
+            "Warangal",
+            "Wardhannapet"
+          ]
+        },
+        {
+          "district": "Yadadri Bhuvanagiri",
+          "taluks": [
+            "Adda Guduru",
+            "Alair",
+            "Atmakur (M)",
+            "B Pochampally",
+            "Bhongir",
+            "Bibinagar",
+            "Bommalaramaram",
+            "Choutuppal",
+            "Gundala",
+            "Motakonduru",
+            "Mothkur",
+            "Narayanpur",
+            "Rajapeta",
+            "Ramannapet",
+            "Thurkapally",
+            "Valigonda",
+            "Yadagirigutta"
+          ]
+        }
+      ]
+    }
+  ]
+}

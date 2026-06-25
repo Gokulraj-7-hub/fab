@@ -5,7 +5,9 @@ import { getDataConnect } from "firebase/data-connect";
 import { 
   connectorConfig, listProducts, 
   createCategory, createUnit, createSize, 
-  createProduct, createCustomer, createSupplier 
+  createProduct, createCustomer, createSupplier,
+  createState, createDistrict, createTaluk, listStates, listDistrictsByState, listTaluksByDistrict,
+  listSuppliers, listCustomers, updateCustomer, deleteCustomer, updateSupplier, deleteSupplier
 } from "./dataconnect/esm/index.esm.js";
 
 // Your web app's Firebase configuration
@@ -30,6 +32,96 @@ const dataConnect = getDataConnect(app, connectorConfig);
 window.firebaseApp = app;
 window.dataConnect = dataConnect;
 window.listProducts = listProducts;
+window.listStates = listStates;
+window.listDistrictsByState = listDistrictsByState;
+window.listTaluksByDistrict = listTaluksByDistrict;
+window.createState = createState;
+window.createDistrict = createDistrict;
+window.createTaluk = createTaluk;
+window.listSuppliers = listSuppliers;
+window.listCustomers = listCustomers;
+window.createSupplier = createSupplier;
+window.updateSupplier = updateSupplier;
+window.deleteSupplier = deleteSupplier;
+window.createCustomer = createCustomer;
+window.updateCustomer = updateCustomer;
+window.deleteCustomer = deleteCustomer;
+
+// Location Data Seeding Script
+window.seedLocations = async () => {
+  console.log("Starting Location Data Seeding...");
+  try {
+    const resp = await fetch('assets/data/india-locations-taluks.json');
+    const data = await resp.json();
+    
+    let stateCount = 0;
+    let distCount = 0;
+    let talukCount = 0;
+
+    // Load existing states
+    const existingStatesRes = await listStates();
+    const existingStatesMap = {};
+    if (existingStatesRes && existingStatesRes.data && existingStatesRes.data.states) {
+      for (const st of existingStatesRes.data.states) {
+        existingStatesMap[st.name] = st.id;
+      }
+    }
+
+    for (const s of data.states) {
+      console.log(`Processing state: ${s.state}`);
+      let stateId = existingStatesMap[s.state];
+      if (!stateId) {
+        const stateRes = await createState({ name: s.state, status: "active" });
+        stateId = Object.values(stateRes.data.state_insert)[0];
+        stateCount++;
+      }
+
+      // Load existing districts for this state
+      const existingDistRes = await listDistrictsByState({ stateId });
+      const existingDistMap = {};
+      if (existingDistRes && existingDistRes.data && existingDistRes.data.districts) {
+        for (const d of existingDistRes.data.districts) {
+          existingDistMap[d.name] = d.id;
+        }
+      }
+
+      for (const d of s.districts) {
+        const dName = d.district.trim();
+        let distId = existingDistMap[dName];
+        if (!distId) {
+          const distRes = await createDistrict({ name: dName, stateId: stateId, status: "active" });
+          distId = Object.values(distRes.data.district_insert)[0];
+          distCount++;
+        }
+        
+        // Load existing taluks for this district
+        const existingTalukRes = await listTaluksByDistrict({ districtId: distId });
+        const existingTalukMap = {};
+        if (existingTalukRes && existingTalukRes.data && existingTalukRes.data.taluks) {
+          for (const t of existingTalukRes.data.taluks) {
+            existingTalukMap[t.name] = t.id;
+          }
+        }
+
+        const talukPromises = [];
+        for (const t of d.taluks) {
+          const tName = t.trim();
+          if (!existingTalukMap[tName]) {
+            talukPromises.push(
+              createTaluk({ name: tName, districtId: distId, status: "active" })
+                .then(() => { talukCount++; })
+                .catch(err => console.error(`Error adding taluk ${tName}:`, err))
+            );
+          }
+        }
+        await Promise.all(talukPromises);
+      }
+    }
+    console.log(`✅ SEEDING COMPLETE! Inserted ${stateCount} new states, ${distCount} new districts, and ${talukCount} new taluks.`);
+  } catch (error) {
+    console.error("Location Seeding failed:", error);
+  }
+};
 
 // Data Migration Script
 window.runMigration = async () => {
@@ -45,7 +137,7 @@ window.runMigration = async () => {
     const categoryMap = {};
     for (const catName of window.Store.categories) {
       const res = await createCategory({ name: catName, status: "active" });
-      categoryMap[catName] = res.data.category_insert; // get the new ID
+      categoryMap[catName] = Object.values(res.data.category_insert)[0]; // Extract ID string
     }
     console.log("Categories migrated.");
 
@@ -53,7 +145,7 @@ window.runMigration = async () => {
     const unitMap = {};
     for (const unitName of window.Store.units) {
       const res = await createUnit({ name: unitName, status: "active" });
-      unitMap[unitName] = res.data.unit_insert;
+      unitMap[unitName] = Object.values(res.data.unit_insert)[0];
     }
     console.log("Units migrated.");
 
@@ -61,7 +153,7 @@ window.runMigration = async () => {
     const sizeMap = {};
     for (const sizeName of window.Store.sizes) {
       const res = await createSize({ name: sizeName, status: "active" });
-      sizeMap[sizeName] = res.data.size_insert;
+      sizeMap[sizeName] = Object.values(res.data.size_insert)[0];
     }
     console.log("Sizes migrated.");
 

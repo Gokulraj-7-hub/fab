@@ -14,14 +14,8 @@ If a user is not using a supported framework, they can use the generated SDK dir
 Here's an example of how to use it with the first 5 operations:
 
 ```js
-import { listProducts, getDashboardStats, createCategory, createUnit, createSize, createProduct, createCustomer, createSupplier } from 'billflow-dataconnect';
+import { createCategory, createUnit, createSize, createProduct, createCustomer, createSupplier, createState, createDistrict, createTaluk, updateCustomer } from 'billflow-dataconnect';
 
-
-// Operation ListProducts: 
-const { data } = await ListProducts(dataConnect);
-
-// Operation GetDashboardStats: 
-const { data } = await GetDashboardStats(dataConnect);
 
 // Operation CreateCategory:  For variables, look at type CreateCategoryVars in ../index.d.ts
 const { data } = await CreateCategory(dataConnect, createCategoryVars);
@@ -40,6 +34,18 @@ const { data } = await CreateCustomer(dataConnect, createCustomerVars);
 
 // Operation CreateSupplier:  For variables, look at type CreateSupplierVars in ../index.d.ts
 const { data } = await CreateSupplier(dataConnect, createSupplierVars);
+
+// Operation CreateState:  For variables, look at type CreateStateVars in ../index.d.ts
+const { data } = await CreateState(dataConnect, createStateVars);
+
+// Operation CreateDistrict:  For variables, look at type CreateDistrictVars in ../index.d.ts
+const { data } = await CreateDistrict(dataConnect, createDistrictVars);
+
+// Operation CreateTaluk:  For variables, look at type CreateTalukVars in ../index.d.ts
+const { data } = await CreateTaluk(dataConnect, createTalukVars);
+
+// Operation UpdateCustomer:  For variables, look at type UpdateCustomerVars in ../index.d.ts
+const { data } = await UpdateCustomer(dataConnect, updateCustomerVars);
 
 
 ```

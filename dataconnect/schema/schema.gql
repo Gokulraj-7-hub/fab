@@ -83,6 +83,19 @@ type District @table(name: "fab_districts") {
   deletedBy: User @ref
 }
 
+type Taluk @table(name: "fab_taluks") {
+  id: String! @col(name: "taluk_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "taluk_name")
+  district: District! @ref
+  status: String! @col(name: "taluk_status")
+  createdAt: Timestamp! @col(name: "taluk_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "taluk_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "taluk_deleted_at")
+  deletedBy: User @ref
+}
+
 # Settings
 type CompanySetting @table(name: "fab_company_settings") {
   id: String! @col(name: "comp_id") @default(expr: "uuidV4()")
@@ -93,7 +106,7 @@ type CompanySetting @table(name: "fab_company_settings") {
   state: State @ref
   stateCode: String @col(name: "comp_state_code")
   district: District @ref
-  taluk: String @col(name: "comp_taluk")
+  taluk: Taluk @ref
   pincode: String @col(name: "comp_pincode")
   phone: String @col(name: "comp_phone")
   mobile: String @col(name: "comp_mobile")
@@ -164,7 +177,7 @@ type Customer @table(name: "fab_customers") {
   address: String! @col(name: "cust_address")
   state: State @ref
   district: District @ref
-  taluk: String @col(name: "cust_taluk")
+  taluk: Taluk @ref
   pincode: String @col(name: "cust_pincode")
   status: String! @col(name: "cust_status")
   createdAt: Timestamp! @col(name: "cust_created_at") @default(expr: "request.time")
@@ -186,7 +199,7 @@ type Supplier @table(name: "fab_suppliers") {
   address: String! @col(name: "sup_address")
   state: State @ref
   district: District @ref
-  taluk: String @col(name: "sup_taluk")
+  taluk: Taluk @ref
   pincode: String @col(name: "sup_pincode")
   status: String! @col(name: "sup_status")
   createdAt: Timestamp! @col(name: "sup_created_at") @default(expr: "request.time")
