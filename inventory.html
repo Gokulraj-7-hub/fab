@@ -7,6 +7,18 @@
   <meta name="description" content="Track stock availability">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <link rel="stylesheet" href="assets/css/style.css?v=3">
+
+  <!-- Firebase Setup -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js",
+        "firebase/data-connect": "https://www.gstatic.com/firebasejs/11.1.0/firebase-data-connect.js"
+      }
+    }
+  </script>
+  <script type="module" src="assets/js/firebase-init.js?v=3"></script>
 </head>
 <body>
   <div class="app-wrapper">

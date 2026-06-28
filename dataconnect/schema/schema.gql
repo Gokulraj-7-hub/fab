@@ -1,0 +1,265 @@
+# Users and Permissions
+type User @table(name: "tbl_users") {
+  id: String! @col(name: "usr_id") @default(expr: "uuidV4()")
+  username: String! @unique
+  passwordHash: String! @col(name: "usr_password")
+  name: String! @col(name: "usr_name")
+  role: String! @col(name: "usr_role")
+  status: String! @col(name: "usr_status")
+  createdAt: Timestamp! @col(name: "usr_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "usr_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "usr_deleted_at")
+  deletedBy: User @ref
+}
+
+type UserPermission @table(name: "tbl_user_permissions") {
+  id: String! @col(name: "perm_id") @default(expr: "uuidV4()")
+  user: User! @ref
+  moduleName: String! @col(name: "perm_module_name")
+  isAllowed: Boolean! @col(name: "perm_is_allowed")
+}
+
+# Lookup tables
+type Category @table(name: "tbl_categories") {
+  id: String! @col(name: "cat_id") @default(expr: "uuidV4()")
+  name: String! @unique
+  status: String! @col(name: "cat_status")
+  createdAt: Timestamp! @col(name: "cat_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "cat_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "cat_deleted_at")
+  deletedBy: User @ref
+}
+
+type Unit @table(name: "tbl_units") {
+  id: String! @col(name: "unit_id") @default(expr: "uuidV4()")
+  name: String! @unique
+  status: String! @col(name: "unit_status")
+  createdAt: Timestamp! @col(name: "unit_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "unit_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "unit_deleted_at")
+  deletedBy: User @ref
+}
+
+type Size @table(name: "tbl_sizes") {
+  id: String! @col(name: "size_id") @default(expr: "uuidV4()")
+  name: String! @unique
+  status: String! @col(name: "size_status")
+  createdAt: Timestamp! @col(name: "size_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "size_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "size_deleted_at")
+  deletedBy: User @ref
+}
+
+type State @table(name: "tbl_states") {
+  id: String! @col(name: "state_id") @default(expr: "uuidV4()")
+  name: String! @unique
+  status: String! @col(name: "state_status")
+  createdAt: Timestamp! @col(name: "state_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "state_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "state_deleted_at")
+  deletedBy: User @ref
+}
+
+type District @table(name: "tbl_districts") {
+  id: String! @col(name: "dist_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "dist_name")
+  state: State! @ref
+  status: String! @col(name: "dist_status")
+  createdAt: Timestamp! @col(name: "dist_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "dist_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "dist_deleted_at")
+  deletedBy: User @ref
+}
+
+type Taluk @table(name: "tbl_taluks") {
+  id: String! @col(name: "taluk_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "taluk_name")
+  district: District! @ref
+  status: String! @col(name: "taluk_status")
+  createdAt: Timestamp! @col(name: "taluk_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "taluk_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "taluk_deleted_at")
+  deletedBy: User @ref
+}
+
+# Settings
+type CompanySetting @table(name: "tbl_company_settings") {
+  id: String! @col(name: "comp_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "comp_name")
+  gstin: String @col(name: "comp_gstin")
+  address: String @col(name: "comp_address")
+  city: String @col(name: "comp_city")
+  state: State @ref
+  stateCode: String @col(name: "comp_state_code")
+  district: District @ref
+  taluk: Taluk @ref
+  pincode: String @col(name: "comp_pincode")
+  phone: String @col(name: "comp_phone")
+  mobile: String @col(name: "comp_mobile")
+  email: String @col(name: "comp_email")
+  tagline: String @col(name: "comp_tagline")
+  invoicePrefix: String @col(name: "comp_invoice_prefix")
+  bankName: String @col(name: "comp_bank_name")
+  accountNo: String @col(name: "comp_account_no")
+  ifsc: String @col(name: "comp_ifsc")
+  branch: String @col(name: "comp_branch")
+  bankName2: String @col(name: "comp_bank_name2")
+  accountNo2: String @col(name: "comp_account_no2")
+  ifsc2: String @col(name: "comp_ifsc2")
+  branch2: String @col(name: "comp_branch2")
+  logo: String @col(name: "comp_logo")
+  centerLogo: String @col(name: "comp_center_logo")
+  defaultGst: Float @col(name: "comp_default_gst")
+  status: String! @col(name: "comp_status")
+  createdAt: Timestamp! @col(name: "comp_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "comp_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "comp_deleted_at")
+  deletedBy: User @ref
+}
+
+# Products
+type Product @table(name: "tbl_products") {
+  id: String! @col(name: "prod_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "prod_name")
+  hsn: String @col(name: "prod_hsn")
+  code: String @unique
+  category: Category @ref
+  unit: Unit @ref
+  size: Size @ref
+  gst: Float! @col(name: "prod_gst")
+  rate: Float! @col(name: "prod_rate")
+  stock: Int! @col(name: "prod_stock")
+  description: String @col(name: "prod_description")
+  status: String! @col(name: "prod_status")
+  createdAt: Timestamp! @col(name: "prod_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "prod_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "prod_deleted_at")
+  deletedBy: User @ref
+}
+
+type ProductPriceHistory @table(name: "tbl_product_price_history") {
+  id: String! @col(name: "hist_id") @default(expr: "uuidV4()")
+  product: Product! @ref
+  oldPrice: Float @col(name: "hist_old_price")
+  newPrice: Float @col(name: "hist_new_price")
+  oldGst: Float @col(name: "hist_old_gst")
+  newGst: Float @col(name: "hist_new_gst")
+  changedBy: User @ref
+  changedAt: Timestamp! @col(name: "hist_changed_at") @default(expr: "request.time")
+}
+
+# Customers & Suppliers
+type Customer @table(name: "tbl_customers") {
+  id: String! @col(name: "cust_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "cust_name")
+  gstin: String @col(name: "cust_gstin")
+  mobile: String! @col(name: "cust_mobile")
+  mobile2: String @col(name: "cust_mobile2")
+  email: String @col(name: "cust_email")
+  address: String! @col(name: "cust_address")
+  state: State @ref
+  district: District @ref
+  taluk: Taluk @ref
+  pincode: String @col(name: "cust_pincode")
+  status: String! @col(name: "cust_status")
+  createdAt: Timestamp! @col(name: "cust_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "cust_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "cust_deleted_at")
+  deletedBy: User @ref
+}
+
+type Supplier @table(name: "tbl_suppliers") {
+  id: String! @col(name: "sup_id") @default(expr: "uuidV4()")
+  name: String! @col(name: "sup_name")
+  contactPerson: String @col(name: "sup_contact_person")
+  gstin: String @col(name: "sup_gstin")
+  mobile: String! @col(name: "sup_mobile")
+  mobile2: String @col(name: "sup_mobile2")
+  email: String @col(name: "sup_email")
+  address: String! @col(name: "sup_address")
+  state: State @ref
+  district: District @ref
+  taluk: Taluk @ref
+  pincode: String @col(name: "sup_pincode")
+  status: String! @col(name: "sup_status")
+  createdAt: Timestamp! @col(name: "sup_created_at") @default(expr: "request.time")
+  createdBy: User @ref
+  updatedAt: Timestamp @col(name: "sup_updated_at")
+  updatedBy: User @ref
+  deletedAt: Timestamp @col(name: "sup_deleted_at")
+  deletedBy: User @ref
+}
+
+# Invoices
+type Invoice @table(name: "tbl_invoices") {
+  id: String! @col(name: "inv_id") @default(expr: "uuidV4()")
+  number: String! @unique
+  date: Date! @col(name: "inv_date")
+  customer: Customer @ref
+  agent: String @col(name: "inv_agent")
+  supplyType: String! @col(name: "inv_supply_type")
+  subtotal: Float! @col(name: "inv_subtotal")
+  cgst: Float! @col(name: "inv_cgst")
+  sgst: Float! @col(name: "inv_sgst")
+  igst: Float! @col(name: "inv_igst")
+  discount: Float! @col(name: "inv_discount")
+  roundOff: Float! @col(name: "inv_round_off")
+  netTotal: Float! @col(name: "inv_net_total")
+  status: String! @col(name: "inv_status")
+  isLocked: Boolean! @col(name: "inv_is_locked")
+}
+
+type InvoiceItem @table(name: "tbl_invoice_items") {
+  id: String! @col(name: "inv_item_id") @default(expr: "uuidV4()")
+  invoice: Invoice! @ref
+  product: Product @ref
+  qty: Int! @col(name: "inv_item_qty")
+  rateSnapshot: Float! @col(name: "inv_item_rate_snapshot")
+  discountSnapshot: Float! @col(name: "inv_item_discount_snapshot")
+  gstSnapshot: Float! @col(name: "inv_item_gst_snapshot")
+  cgstAmount: Float! @col(name: "inv_item_cgst_amount")
+  sgstAmount: Float! @col(name: "inv_item_sgst_amount")
+  igstAmount: Float! @col(name: "inv_item_igst_amount")
+  netAmount: Float! @col(name: "inv_item_net_amount")
+}
+
+# Returns
+type Return @table(name: "tbl_returns") {
+  id: String! @col(name: "ret_id") @default(expr: "uuidV4()")
+  number: String! @unique
+  date: Date! @col(name: "ret_date")
+  invoiceRef: String! @col(name: "ret_invoice_ref")
+  customer: Customer @ref
+  reason: String! @col(name: "ret_reason")
+  addedToInventory: Boolean! @col(name: "ret_added_to_inventory")
+  refundTotal: Float! @col(name: "ret_refund_total")
+}
+
+type ReturnItem @table(name: "tbl_return_items") {
+  id: String! @col(name: "ret_item_id") @default(expr: "uuidV4()")
+  return: Return! @ref
+  product: Product @ref
+  qty: Int! @col(name: "ret_item_qty")
+  rateSnapshot: Float! @col(name: "ret_item_rate_snapshot")
+  amount: Float! @col(name: "ret_item_amount")
+}

@@ -6,7 +6,19 @@
   <title>Settings - BillFlow</title>
   <meta name="description" content="Business settings and configuration">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="assets/css/style.css?v=5">
+
+  <!-- Firebase Setup -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js",
+        "firebase/data-connect": "https://www.gstatic.com/firebasejs/11.1.0/firebase-data-connect.js"
+      }
+    }
+  </script>
+  <script type="module" src="assets/js/firebase-init.js?v=3"></script>
 </head>
 <body>
   <div class="app-wrapper">
@@ -80,16 +92,16 @@
                   </div>
                   <div class="grid-3">
                     <div class="form-group">
-                      <label for="s-state">State</label>
-                      <select class="form-control" id="s-state"></select>
+                      <label for="comp-state">State</label>
+                      <input type="text" class="form-control" id="comp-state" placeholder="Select State">
                     </div>
                     <div class="form-group">
-                      <label for="s-district">District</label>
-                      <input type="text" class="form-control" id="s-district" placeholder="District">
+                      <label for="comp-district">District</label>
+                      <input type="text" class="form-control" id="comp-district" placeholder="Select District">
                     </div>
                     <div class="form-group">
-                      <label for="s-taluk">Taluk</label>
-                      <input type="text" class="form-control" id="s-taluk" placeholder="Taluk">
+                      <label for="comp-taluk">Taluk</label>
+                      <input type="text" class="form-control" id="comp-taluk" placeholder="Enter Taluk">
                     </div>
                   </div>
                   <div class="grid-3">
@@ -355,8 +367,24 @@
   <script src="assets/js/store.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/components.js"></script>
+  <script src="assets/js/location-dropdown.js"></script>
   <script>
     Components.init('Settings');
+
+    // Initialize location dropdown for company settings
+    let compLocDropdown = null;
+    LocationDropdown.init({
+      stateEl: '#comp-state',
+      districtEl: '#comp-district',
+      talukEl: '#comp-taluk'
+    }).then(instance => {
+      compLocDropdown = instance;
+      // Set saved values after init
+      const c = Store.company;
+      if (c.state || c.district || c.taluk) {
+        compLocDropdown.setValues(c.state || '', c.district || '', c.taluk || '');
+      }
+    });
 
     // Load company data
     const c = Store.company;
@@ -454,15 +482,7 @@
       document.getElementById('s-center-logo').value = '';
     }
 
-    // Populate state dropdown
-    const stateSelComp = document.getElementById('s-state');
-    stateSelComp.innerHTML = '<option value="">Select State</option>';
-    Store.states.forEach(s => { stateSelComp.innerHTML += `<option value="${s}">${s}</option>`; });
-    stateSelComp.value = c.state || '';
-
-    // Load district and taluk
-    document.getElementById('s-district').value = c.district || '';
-    document.getElementById('s-taluk').value = c.taluk || '';
+    // State/district/taluk loaded via LocationDropdown init above
 
     document.getElementById('s-bank-name').value = c.bankName || '';
     document.getElementById('s-account').value = c.accountNo || '';
@@ -643,9 +663,10 @@
       Store.company.gstin = document.getElementById('s-gstin').value;
       Store.company.address = document.getElementById('s-address').value;
       Store.company.city = document.getElementById('s-city').value;
-      Store.company.state = document.getElementById('s-state').value;
-      Store.company.district = document.getElementById('s-district').value.trim();
-      Store.company.taluk = document.getElementById('s-taluk').value.trim();
+      const loc = compLocDropdown ? compLocDropdown.getValues() : { state: '', district: '', taluk: '' };
+      Store.company.state = loc.state;
+      Store.company.district = loc.district;
+      Store.company.taluk = loc.taluk;
       Store.company.pincode = document.getElementById('s-pincode').value;
       Store.company.phone = document.getElementById('s-phone').value;
       Store.company.mobile = document.getElementById('s-mobile').value;

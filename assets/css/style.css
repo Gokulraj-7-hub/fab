@@ -1188,3 +1188,121 @@ td .empty-state p {
 }
 
 .sidebar-overlay.active { display: block; opacity: 1; }
+
+/* ---- Location Combo-Box (Searchable Dropdown) ---- */
+.loc-combo-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.loc-combo-wrapper .loc-combo-input {
+  padding-right: 32px;
+  cursor: text;
+}
+
+.loc-combo-wrapper .loc-combo-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loc-combo-wrapper.open .loc-combo-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.loc-combo-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 2100;
+  scrollbar-width: thin;
+}
+
+.loc-combo-dropdown.open {
+  display: block;
+  animation: locComboFadeIn 0.15s ease;
+}
+
+@keyframes locComboFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loc-combo-option {
+  padding: 8px 14px;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.1s ease;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.loc-combo-option:last-child {
+  border-bottom: none;
+}
+
+.loc-combo-option:hover,
+.loc-combo-option.keyboard-active {
+  background: var(--primary-bg);
+  color: var(--primary);
+}
+
+.loc-combo-option.active {
+  background: linear-gradient(135deg, var(--primary-bg), rgba(29, 78, 216, 0.08));
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.loc-combo-option strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.loc-combo-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Compact modal overrides for location combo */
+.modal-compact .loc-combo-wrapper .loc-combo-input {
+  padding: 7px 30px 7px 10px;
+  font-size: 0.85rem;
+}
+
+.modal-compact .loc-combo-wrapper .loc-combo-arrow {
+  right: 8px;
+  font-size: 0.7rem;
+}
+
+.modal-compact .loc-combo-dropdown {
+  max-height: 180px;
+}
+
+.modal-compact .loc-combo-option {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+

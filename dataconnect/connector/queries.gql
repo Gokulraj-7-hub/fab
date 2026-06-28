@@ -1,0 +1,80 @@
+# Product queries
+
+query ListProducts @auth(level: PUBLIC) {
+  products {
+    id
+    name
+    rate
+    stock
+    status
+  }
+}
+
+query GetDashboardStats @auth(level: PUBLIC) {
+  products(where: { stock: { le: 10 }, status: { eq: "active" } }) {
+    id
+    name
+    stock
+  }
+}
+
+# Location queries
+
+query ListStates @auth(level: PUBLIC) {
+  states(orderBy: [{ name: ASC }]) {
+    id
+    name
+    status
+  }
+}
+
+query ListDistrictsByState($stateId: String!) @auth(level: PUBLIC) {
+  districts(where: { stateId: { eq: $stateId } }, orderBy: [{ name: ASC }]) {
+    id
+    name
+    status
+  }
+}
+
+query ListTaluksByDistrict($districtId: String!) @auth(level: PUBLIC) {
+  taluks(where: { districtId: { eq: $districtId } }, orderBy: [{ name: ASC }]) {
+    id
+    name
+    status
+  }
+}
+
+# Entity queries
+
+query ListSuppliers @auth(level: PUBLIC) {
+  suppliers(where: { status: { eq: "active" } }, orderBy: [{ name: ASC }]) {
+    id
+    name
+    contactPerson
+    gstin
+    mobile
+    mobile2
+    email
+    address
+    state { name }
+    district { name }
+    taluk { name }
+    pincode
+  }
+}
+
+query ListCustomers @auth(level: PUBLIC) {
+  customers(where: { status: { eq: "active" } }, orderBy: [{ name: ASC }]) {
+    id
+    name
+    gstin
+    mobile
+    mobile2
+    email
+    address
+    state { name }
+    district { name }
+    taluk { name }
+    pincode
+  }
+}

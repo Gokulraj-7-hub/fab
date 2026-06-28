@@ -6,7 +6,19 @@
   <title>Suppliers - BillFlow</title>
   <meta name="description" content="Manage your suppliers">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="stylesheet" href="assets/css/style.css?v=4">
+  <link rel="stylesheet" href="assets/css/style.css?v=5">
+
+  <!-- Firebase Setup -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js",
+        "firebase/analytics": "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js",
+        "firebase/data-connect": "https://www.gstatic.com/firebasejs/11.1.0/firebase-data-connect.js"
+      }
+    }
+  </script>
+  <script type="module" src="assets/js/firebase-init.js?v=3"></script>
 </head>
 <body>
   <div class="app-wrapper">
@@ -104,15 +116,15 @@
           <div class="grid-4">
             <div class="form-group" style="margin-bottom:0">
               <label for="s-state">State *</label>
-              <select class="form-control" id="s-state" required></select>
+              <input type="text" class="form-control" id="s-state" placeholder="Select State">
             </div>
             <div class="form-group" style="margin-bottom:0">
               <label for="s-district">District</label>
-              <input type="text" class="form-control" id="s-district" placeholder="District">
+              <input type="text" class="form-control" id="s-district" placeholder="Select District">
             </div>
             <div class="form-group" style="margin-bottom:0">
               <label for="s-taluk">Taluk</label>
-              <input type="text" class="form-control" id="s-taluk" placeholder="Taluk">
+              <input type="text" class="form-control" id="s-taluk" placeholder="Enter Taluk">
             </div>
             <div class="form-group" style="margin-bottom:0">
               <label for="s-pincode">Pincode</label>
@@ -148,17 +160,35 @@
     </div>
   </div>
 
-  <script src="assets/js/store.js"></script>
   <script src="assets/js/utils.js"></script>
   <script src="assets/js/components.js"></script>
+  <script src="assets/js/location-dropdown.js"></script>
   <script>
     Components.init('Suppliers');
     let deleteTargetId = null;
+    let locDropdown = null;
+    let allSuppliers = [];
 
-    // Populate states
-    const stateSelect = document.getElementById('s-state');
-    stateSelect.innerHTML = '<option value="">Select State</option>';
-    Store.states.forEach(s => { stateSelect.innerHTML += `<option value="${s}">${s}</option>`; });
+    // Initialize cascading location dropdowns
+    LocationDropdown.init({
+      stateEl: '#s-state',
+      districtEl: '#s-district',
+      talukEl: '#s-taluk'
+    }).then(instance => { locDropdown = instance; });
+
+    async function loadSuppliers() {
+      if (!window.listSuppliers) {
+        setTimeout(loadSuppliers, 100);
+        return;
+      }
+      try {
+        const res = await window.listSuppliers();
+        allSuppliers = res.data.suppliers;
+        filterSuppliers();
+      } catch (err) {
+        console.error('Error loading suppliers:', err);
+      }
+    }
 
     function renderSuppliers(suppliers) {
       const tbody = document.getElementById('suppliers-body');
@@ -176,11 +206,11 @@
           <td>${s.mobile}${s.mobile2 ? ', ' + s.mobile2 : ''}</td>
           <td>${s.email || '—'}</td>
           <td class="text-sm">${s.address}</td>
-          <td>${s.state}</td>
+          <td>${s.state ? s.state.name : '—'}</td>
           <td>
             <div style="display:flex;gap:6px">
-              <button class="btn-icon edit" title="Edit" onclick="editSupplier(${s.id})"><i class="bi bi-pencil"></i></button>
-              <button class="btn-icon delete" title="Delete" onclick="deleteSupplier(${s.id})"><i class="bi bi-trash"></i></button>
+              <button class="btn-icon edit" title="Edit" onclick="editSupplier('${s.id}')"><i class="bi bi-pencil"></i></button>
+              <button class="btn-icon delete" title="Delete" onclick="deleteSupplier('${s.id}')"><i class="bi bi-trash"></i></button>
             </div>
           </td>
         </tr>
@@ -188,7 +218,7 @@
     }
 
     function filterSuppliers() {
-      let suppliers = Store.getSuppliers();
+      let suppliers = [...allSuppliers];
       const q = document.getElementById('supplier-search').value;
       if (q) suppliers = Utils.searchFilter(suppliers, q, ['name', 'gstin', 'mobile', 'mobile2', 'email']);
       renderSuppliers(suppliers);
@@ -199,6 +229,7 @@
       document.getElementById('supplier-form').reset();
       document.getElementById('s-edit-id').value = '';
       document.getElementById('supplier-modal-title').textContent = supplier ? 'Edit Supplier' : 'Add Supplier';
+      if (locDropdown) locDropdown.clear();
       if (supplier) {
         document.getElementById('s-edit-id').value = supplier.id;
         document.getElementById('s-name').value = supplier.name;
@@ -207,24 +238,91 @@
         document.getElementById('s-mobile2').value = supplier.mobile2 || '';
         document.getElementById('s-email').value = supplier.email;
         document.getElementById('s-address').value = supplier.address;
-        document.getElementById('s-state').value = supplier.state;
-        document.getElementById('s-district').value = supplier.district || '';
-        document.getElementById('s-taluk').value = supplier.taluk || '';
-        document.getElementById('s-pincode').value = supplier.pincode;
+        document.getElementById('s-pincode').value = supplier.pincode || '';
+        if (locDropdown) {
+          locDropdown.setValues(
+            supplier.state ? supplier.state.name : '', 
+            supplier.district ? supplier.district.name : '', 
+            supplier.taluk ? supplier.taluk.name : ''
+          );
+        }
       }
     }
 
     function closeSupplierModal() { document.getElementById('supplier-modal').classList.remove('active'); }
-    function editSupplier(id) { openSupplierModal(Store.getSupplierById(id)); }
+    function editSupplier(id) { 
+      const supplier = allSuppliers.find(s => s.id === id);
+      openSupplierModal(supplier); 
+    }
     function deleteSupplier(id) { deleteTargetId = id; document.getElementById('delete-modal').classList.add('active'); }
     function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('active'); }
-    function confirmDelete() {
-      if (deleteTargetId) { Store.deleteSupplier(deleteTargetId); Utils.showToast('Supplier deleted'); filterSuppliers(); closeDeleteModal(); }
+    
+    async function confirmDelete() {
+      if (deleteTargetId) {
+        try {
+          await window.deleteSupplier({ id: deleteTargetId });
+          Utils.showToast('Supplier deleted');
+          closeDeleteModal();
+          loadSuppliers();
+        } catch (err) {
+          console.error('Delete failed:', err);
+          Utils.showToast('Failed to delete supplier');
+        }
+      }
     }
 
-    function saveSupplier(e) {
+    async function saveSupplier(e) {
       e.preventDefault();
+      
+      // Basic validation
+      const stateInput = document.getElementById('s-state').value || (locDropdown ? locDropdown.getValues().state : '');
+      if (!stateInput) {
+        Utils.showToast('State is required');
+        return false;
+      }
+
       const editId = document.getElementById('s-edit-id').value;
+      const loc = locDropdown ? locDropdown.getValues() : { state: '', district: '', taluk: '' };
+      
+      // Look up DB IDs for the locations, auto-inserting if missing
+      let stateId = null, districtId = null, talukId = null;
+      try {
+        if (loc.state) {
+          const statesRes = await window.listStates();
+          let stateObj = statesRes.data.states.find(s => s.name === loc.state);
+          if (!stateObj) {
+            const res = await window.createState({ name: loc.state, status: "active" });
+            stateId = Object.values(res.data.state_insert)[0];
+          } else {
+            stateId = stateObj.id;
+          }
+
+          if (stateId && loc.district) {
+            const distRes = await window.listDistrictsByState({ stateId });
+            let distObj = distRes.data.districts.find(d => d.name === loc.district);
+            if (!distObj) {
+              const res = await window.createDistrict({ name: loc.district, stateId, status: "active" });
+              districtId = Object.values(res.data.district_insert)[0];
+            } else {
+              districtId = distObj.id;
+            }
+
+            if (districtId && loc.taluk) {
+              const talukRes = await window.listTaluksByDistrict({ districtId });
+              let talukObj = talukRes.data.taluks.find(t => t.name === loc.taluk);
+              if (!talukObj) {
+                const res = await window.createTaluk({ name: loc.taluk, districtId, status: "active" });
+                talukId = Object.values(res.data.taluk_insert)[0];
+              } else {
+                talukId = talukObj.id;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to resolve location IDs', err);
+      }
+
       const data = {
         name: document.getElementById('s-name').value,
         gstin: document.getElementById('s-gstin').value,
@@ -232,24 +330,36 @@
         mobile2: document.getElementById('s-mobile2').value,
         email: document.getElementById('s-email').value,
         address: document.getElementById('s-address').value,
-        state: document.getElementById('s-state').value,
-        district: document.getElementById('s-district').value.trim(),
-        taluk: document.getElementById('s-taluk').value.trim(),
-        pincode: document.getElementById('s-pincode').value
+        stateId: stateId,
+        districtId: districtId,
+        talukId: talukId,
+        pincode: document.getElementById('s-pincode').value,
+        status: "active"
       };
-      if (editId) { Store.updateSupplier(Number(editId), data); Utils.showToast('Supplier updated'); }
-      else { Store.addSupplier(data); Utils.showToast('Supplier added'); }
-      closeSupplierModal();
-      filterSuppliers();
+
+      try {
+        if (editId) { 
+          await window.updateSupplier({ id: editId, ...data });
+          Utils.showToast('Supplier updated'); 
+        } else { 
+          await window.createSupplier(data);
+          Utils.showToast('Supplier added'); 
+        }
+        closeSupplierModal();
+        loadSuppliers();
+      } catch (err) {
+        console.error('Save failed:', err);
+        Utils.showToast('Failed to save supplier');
+      }
       return false;
     }
 
-    filterSuppliers();
+    loadSuppliers();
 
     // Check URL parameters to auto-open modal
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('action') === 'add') {
-      openSupplierModal();
+      setTimeout(openSupplierModal, 500);
     }
   </script>
 </body>

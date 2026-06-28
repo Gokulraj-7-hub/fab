@@ -389,3 +389,4 @@ const Store = {
 
 // Load saved data on init
 Store._load();
+window.Store = Store;

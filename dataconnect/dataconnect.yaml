@@ -1,0 +1,11 @@
+specVersion: "v1alpha"
+serviceId: "billing-12fda-service"
+location: "us-east4"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "billingdb"
+      cloudSql:
+        instanceId: "billing-12fda-instance"
+connectorDirs: ["./connector"]
